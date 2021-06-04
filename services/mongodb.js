@@ -26,17 +26,25 @@ async function readSeller(email){
 }
 
 /***Write Queries ***/
-async function createSeller(email,password){
+async function createSeller(email,password,id){
+    var db_user;
+    let uuid = mongoose.Types.ObjectId(id);
          let seller = new Seller({
+            id:id,
+            uuid:uuid,
             email:email,
             password:password
         });
     await seller.save().then((user)=>{
-        return "Seller successfully created";
+        console.log("User saved successfully");
+        db_user=user;
+        return user;
     }).catch((err)=>{
+        console.log("Error while adding user to db")  
         throw new Error(err);
         return null;
     }); 
+    return db_user;
 }
 module.exports={
     createSeller,

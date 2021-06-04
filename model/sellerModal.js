@@ -4,32 +4,34 @@ const Schema = mongoose.Schema;
 
 /*** Seller Schema ***/
 const SellerSchema = new Schema({
-    uuid:{
-        type:String, 
+    uuid: {
+        type: String,
     },
-    phone:{
-        type:String,
-        unique:true, 
+    id: {
+        type: String
     },
-    email:{
-        type:String,
-        unique:true,
-        required:true,
+    email: {
+        type: String,
+        unique: true,
+        required: true,
     },
-    password:{
-        type:String,
-        required:true,
+    password: {
+        type: String,
+        required: true,
     },
-    address:{
-        type:String, 
+    address: {
+        type: String,
     },
-    city:{
-        type:String,
+    phoneNumber: {
+        type: String,
     },
-    state:{
-        type:String
-    }, 
+    city: {
+        type: String,
+    },
+    state: {
+        type: String
+    },
 }, {
     timestamps: true,
-  });
-  module.exports=mongoose.model("Seller",SellerSchema);
+});
+module.exports = mongoose.model("Seller", SellerSchema);

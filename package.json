@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +23,7 @@
     "logger": "0.0.1",
     "mongoose": "^5.12.12",
     "morgan": "^1.10.0",
-    "nanoid": "^3.1.23"
+    "nanoid": "^3.1.23",
+    "nodemon": "^2.0.7"
   }
 }
