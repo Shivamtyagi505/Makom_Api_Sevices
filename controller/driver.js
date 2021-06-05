@@ -98,7 +98,7 @@ exports.GetProfile = async function(req,res,next){
         uuid:user.uuid,
         name:user.name,
         email:user.email??"",
-        phone:user.phoneNumber??"",
+        phone:user.phone??"",
         address:user.address??"",
         city:user.city??"",
         state:user.state??"",
@@ -107,3 +107,4 @@ exports.GetProfile = async function(req,res,next){
        user:user_data
     });
 }
+

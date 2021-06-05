@@ -7,6 +7,8 @@ const database = require('../services/mongodb');
 const { IDSIZE, DBERROR } = require('../util/constants');
 const jwt = require('jsonwebtoken');
 const Admin = require('../model/adminModal');
+const Driver = require('../model/driverModal');
+const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 
@@ -52,6 +54,87 @@ exports.Signin = async function (req, res, next) {
         });
     }
 };
+
+//**** admin other domains ****//
+
+//get drivers or particular driver by id;
+exports.GetDriver = async function(req,res,next){
+    let id = req.query.id;
+    var alldrivers=[];
+    if(id!=null){
+        database.readDriverById(id).then((val)=>{
+            var user_data={
+                uuid:val.uuid,
+                name:val.name,
+                email:val.email??"",
+                phone:val.phone??"",
+                address:val.address??"",
+                city:val.city??"",
+                state:val.state??"",
+            }
+            return res.status(200).json({
+                driver: user_data
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }else{
+        database.readAllDrivers().then((val)=>{
+            return res.status(200).json({
+                drivers: val
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }
+}
+
+//get seller or particular seller by id;
+exports.GetSeller = async function(req,res,next){
+    let id = req.query.id;
+    var allsellers=[];
+    if(id!=null){
+        database.readSellerById(id).then((val)=>{
+            var user_data={
+                uuid:val.uuid,
+                name:val.name,
+                email:val.email??"",
+                phone:val.phone??"",
+                address:val.address??"",
+                city:val.city??"",
+                state:val.state??"",
+            }
+            return res.status(200).json({
+                seller: user_data
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }else{
+        database.readAllSellers().then((val)=>{
+            return res.status(200).json({
+                sellers: val
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }
+}
+
+
+
 
  
 

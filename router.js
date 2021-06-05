@@ -24,9 +24,15 @@ module.exports= function(app){
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
     apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
 
+    //Admin get request to get driver and seller details;
+    apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
+    apiRoutes.get('/admin/seller',auth.requireAdminPermission,adminAuthController.GetSeller);
+
+
     //driver APIs
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
-    
+    apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
+
 
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);

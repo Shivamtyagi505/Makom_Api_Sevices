@@ -45,6 +45,23 @@ async function readSellerById(uuid){
     } 
     return user;
 }
+//all sellers
+async function readAllSellers(){
+    var sellers;
+    await Seller.find({},function(err,result){
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("getting all drivers");
+            sellers =result.map((user) => user.uuid);; 
+        }
+
+    }).catch((e)=>{
+        log.dbLog('readUser:' + id, err);    
+    });
+    return sellers;
+}
+
 
 //admin
 //admin by email
@@ -124,6 +141,22 @@ async function readDriverById(uuid){
     } 
     return user;
 }
+//all drivers
+async function readAllDrivers(){
+    var drivers;
+    await Driver.find({},function(err,result){
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("getting all drivers");
+            drivers =result.map((user) => user.uuid);; 
+        }
+
+    }).catch((e)=>{
+        log.dbLog('readUser:' + id, err);    
+    });
+    return drivers;
+}
 
 
 /***Write Queries ***/
@@ -166,9 +199,11 @@ module.exports={
     createSeller,
     readSellerByEmail,
     readSellerById,
+    readAllSellers,
     readAdminByEmail,
     readAdminById,
     readDriverByEmail,
     readDriverById,
-    createDriver
+    createDriver,
+    readAllDrivers
 }
