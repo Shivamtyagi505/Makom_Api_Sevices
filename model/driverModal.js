@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-/*** Seller Schema ***/
-const SellerSchema = new Schema({
+/*** Driver Schema ***/
+const DriverSchema = new Schema({
     uuid: {
         type: String,
         required:true
@@ -20,7 +20,7 @@ const SellerSchema = new Schema({
     password: {
         type: String,
         required: true,
-    },
+    }, 
     address: {
         type: String,
         required:true
@@ -37,16 +37,11 @@ const SellerSchema = new Schema({
         type: String,
         required:true
     },   
-    isverified:{
-        type: Boolean,
-        required:true
-    },
     isblocked:{
         type:Boolean,
         required:true,
-    }
-
+    },
 }, {
     timestamps: true,
 });
-module.exports = mongoose.model("Seller", SellerSchema);
+module.exports = mongoose.model("Driver", DriverSchema);

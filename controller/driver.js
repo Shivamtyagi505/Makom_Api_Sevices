@@ -6,20 +6,19 @@ const bcrypt = require('bcrypt');
 const database = require('../services/mongodb');
 const { IDSIZE, DBERROR } = require('../util/constants');
 const jwt = require('jsonwebtoken');
-const Seller = require('../model/sellerModal');
+const Driver = require('../model/driverModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 
 
-
-//seller sign up
+//driver  sign up only under admin control no independent signup
 exports.Signup = function (req, res, next) {
     //encrypting the plain password 
     bcrypt.hash(req.body.password, 10).then(
         (hash) => {
             let id = nanoid(IDSIZE);
             let uuid = mongoose.Types.ObjectId(id);
-             let seller = new Seller({
+             let driver = new Driver({
                 uuid:uuid, 
                 email:req.body.email,
                 name:req.body.name,
@@ -28,15 +27,14 @@ exports.Signup = function (req, res, next) {
                 password:hash,
                 city:req.body.city,
                 state: req.body.state,
-                isverified:false,
-                isblocked:false,
+                isblocked:false, 
             }); 
-            database.createSeller(seller).then((val) => {
+            database.createDriver(driver).then((val) => {
                 if (val == null) {
                     throw Error("Error while setting account");
                 } else {
                     res.status(201).json({
-                        message: "seller account successfully created."
+                        message: "driver account successfully created."
                     });
                 }
             }).catch((err) => {
@@ -57,8 +55,8 @@ exports.Signup = function (req, res, next) {
 exports.Signin = async function (req, res, next) {
     var dbuser = null;
     try {
-        //finding the seller in database from the email provided.
-        await database.readSellerByEmail(req.body.email).then((val) => {
+        //finding the driver in database from the email provided.
+        await database.readDriverByEmail(req.body.email).then((val) => {
             dbuser = val;
         }).catch((e) => {
             return res.status(401).json({
