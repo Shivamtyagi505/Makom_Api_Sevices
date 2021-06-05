@@ -8,7 +8,7 @@ const log = require('../util/logger')
 
 
 /***Read Queries***/
-async function readSeller(email){ 
+async function readSellerByEmail(email){ 
     var user=null;
     var data ={
         email:email
@@ -21,6 +21,25 @@ async function readSeller(email){
         });
     }catch(err){
         log.dbLog('readUser:' + email, err);
+    } 
+    return user;
+}
+async function readSellerById(uuid){ 
+    var user=null;
+    console.log(uuid);
+    var data ={
+        uuid:uuid
+    };
+    try{
+       await Seller.findOne(data,function(err,result){
+         console.log(result);  
+        if(!err){
+            user=result; 
+        } 
+        });
+
+    }catch(err){
+        log.dbLog('readUser:' + id, err);
     } 
     return user;
 }
@@ -48,5 +67,6 @@ async function createSeller(email,password,id){
 }
 module.exports={
     createSeller,
-    readSeller
+    readSellerByEmail,
+    readSellerById
 }
