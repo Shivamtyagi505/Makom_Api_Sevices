@@ -4,6 +4,7 @@ const testController = require('./controller/test');
 const sellerAuthController = require('./controller/seller');
 const adminAuthController = require('./controller/admin');
 const driverAuthController = require('./controller/driver');
+const OrderController =  require('./controller/order');
 const auth = require('./util/authorisation');
 
 
@@ -33,6 +34,9 @@ module.exports= function(app){
     //driver APIs
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
     apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
+    
+    //order Create APIs
+    apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
 
 
     //set url for API v1 group routes

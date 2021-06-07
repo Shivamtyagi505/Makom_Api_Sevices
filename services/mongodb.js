@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Seller = require('../model/sellerModal');
 const Admin = require('../model/adminModal');
 const Driver = require('../model/driverModal');
+const Order = require('../model/orderModal')
 
 //UTILS
 const log = require('../util/logger')
@@ -220,6 +221,7 @@ async function createDriver(driver){
     return db_user;
 }
 
+ 
 //admin restricted APIs
 async function ChangeSellerStatus(seller){
     var db_user;
@@ -229,10 +231,27 @@ async function ChangeSellerStatus(seller){
         return user;
     }).catch((err)=>{
         console.log("Error while adding user to db")  
+        
         throw new Error(err);
         return null;
     }); 
     return db_user;
+}
+
+ 
+//order
+async function createOrder(OrderPlace){
+    var order_details;
+    await OrderPlace.save().then((user)=>{
+        console.log("Order Create successfully");
+        order_details=user;
+        return order_details;
+    }).catch((err)=>{
+        console.log("Error while  Creating order")  
+        throw new Error(err);
+        return null;
+    }); 
+    return order_details;
 }
 
 module.exports={
@@ -247,5 +266,6 @@ module.exports={
     readDriverByEmail,
     readDriverById,
     createDriver,
-    readAllDrivers
+    readAllDrivers,
+    createOrder
 }
