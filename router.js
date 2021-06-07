@@ -11,7 +11,7 @@ module.exports= function(app){
     //initialising api routes
     const apiRoutes = express.Router();
 
-    //test APIs
+    //test APIs 
     apiRoutes.get('/test/hello',testController.getRequest);
     apiRoutes.post('/test/helo',testController.postRequest);
 
