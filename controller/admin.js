@@ -132,6 +132,27 @@ exports.GetSeller = async function(req,res,next){
         });
     }
 }
+// update seller status by id;
+exports.ChangeSellerStatus = async function(req,res,next){
+    let id = req.query.id;
+        database.readSellerById(id).then((val)=>{
+            var user_data=val;
+            user_data.isblocked=req.body.isblocked;
+            
+            database.ChangeSellerStatus(user_data).then((result)=>{ 
+                return res.status(200).json({
+                    result:"Status chaged successfully"
+            });
+            }).catch((e)=>{
+                throw "Error while changing status";
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });  
+}
 
 
 

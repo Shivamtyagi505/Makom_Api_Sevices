@@ -177,7 +177,32 @@ async function createSeller(seller){
     }); 
     return db_user;
 }
- 
+ //update seller data
+async function UpdateSeller(user,name,phone,address,city,state){
+    try { 
+        if (name) {
+          user.name = name;
+        }
+        if (phone) {
+          user.phone = phone;
+        }
+        if (address) {
+          user.address = address;
+        }
+        if (city) {
+          user.city = city;
+        }
+        
+        if (state) {
+            user.state = state;
+          } 
+        await user.save();
+        return user;
+      } catch (err) {
+        log.dbLog('updateUser:' + uuid, err);
+        return null;
+      }
+}
 
 
 //driver 
@@ -195,11 +220,28 @@ async function createDriver(driver){
     return db_user;
 }
 
+//admin restricted APIs
+async function ChangeSellerStatus(seller){
+    var db_user;
+    await seller.save().then((user)=>{
+        console.log("seller status changed successfully");
+        db_user=user;
+        return user;
+    }).catch((err)=>{
+        console.log("Error while adding user to db")  
+        throw new Error(err);
+        return null;
+    }); 
+    return db_user;
+}
+
 module.exports={
     createSeller,
     readSellerByEmail,
     readSellerById,
     readAllSellers,
+    UpdateSeller,
+    ChangeSellerStatus,
     readAdminByEmail,
     readAdminById,
     readDriverByEmail,

@@ -19,7 +19,7 @@ module.exports= function(app){
     apiRoutes.post('/seller/signup',sellerAuthController.Signup);
     apiRoutes.post('/seller/signin',sellerAuthController.Signin);
     apiRoutes.get('/seller/profile',auth.requireSellerAuth,sellerAuthController.GetProfile);
-
+    apiRoutes.post('/seller/profile',auth.requireSellerAuth,sellerAuthController.UpdateProfile);
     //admin APIs 
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
     apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
@@ -27,6 +27,7 @@ module.exports= function(app){
     //Admin get request to get driver and seller details;
     apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
     apiRoutes.get('/admin/seller',auth.requireAdminPermission,adminAuthController.GetSeller);
+    apiRoutes.post('/admin/seller/changestatus',auth.requireAdminPermission,adminAuthController.ChangeSellerStatus);
 
 
     //driver APIs

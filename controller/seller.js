@@ -89,6 +89,7 @@ exports.Signin = async function (req, res, next) {
             throw "no user found";
         }
     } catch (e) {
+        console.log(e);
         return res.status(401).json({
             error: "Bad Request"
         });
@@ -108,4 +109,38 @@ exports.GetProfile = async function(req,res,next){
     return res.status(200).json({
        user:user_data
     });
+}
+
+exports.UpdateProfile = async function(req,res,next){
+    var user = req.user;
+    const { name, phone, address, city,state} = req.body;
+ 
+    database.UpdateSeller(user,name,phone,address,city,state).then(user => {
+        if (user) {
+            var user_data={
+                uuid:user.uuid,
+                name:user.name,
+                email:user.email,
+                phone:user.phoneNumber,
+                address:user.address,
+                city:user.city,
+                state:user.state};
+          res.json({
+            status: 0,
+            user: user_data,
+          });
+          
+        } else {
+          res.json({
+            status: 1,
+            error: 'error - check lang, sports'
+          });
+        }
+      }).catch(err => {
+        log.errLog(err);
+        res.json({
+          status: 5,
+          error: DBERROR,
+        });
+      });
 }
