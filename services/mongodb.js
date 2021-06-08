@@ -222,11 +222,27 @@ async function createDriver(driver){
 }
 
  
-//admin restricted APIs
+//admin restricted APIs for seller
 async function ChangeSellerStatus(seller){
     var db_user;
     await seller.save().then((user)=>{
         console.log("seller status changed successfully");
+        db_user=user;
+        return user;
+    }).catch((err)=>{
+        console.log("Error while adding user to db")  
+        
+        throw new Error(err);
+        return null;
+    }); 
+    return db_user;
+}
+
+//admin restricted APIs for driver
+async function ChangDriverStatus(driver){
+    var db_user;
+    await driver.save().then((user)=>{
+        console.log("Driver status changed successfully");
         db_user=user;
         return user;
     }).catch((err)=>{
@@ -261,6 +277,7 @@ module.exports={
     readAllSellers,
     UpdateSeller,
     ChangeSellerStatus,
+    ChangDriverStatus,
     readAdminByEmail,
     readAdminById,
     readDriverByEmail,

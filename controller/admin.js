@@ -141,7 +141,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
             
             database.ChangeSellerStatus(user_data).then((result)=>{ 
                 return res.status(200).json({
-                    result:"Status chaged successfully"
+                    result:"Status changed successfully"
             });
             }).catch((e)=>{
                 throw "Error while changing status";
@@ -154,7 +154,27 @@ exports.ChangeSellerStatus = async function(req,res,next){
         });  
 }
 
-
+// update driver status by id;
+exports.ChangeDriverStatus = async function(req,res,next){
+    let id = req.query.id;
+        database.readDriverById(id).then((val)=>{
+            var user_data=val;
+            user_data.isblocked=req.body.isblocked;
+            
+            database.ChangeDriverStatus(user_data).then((result)=>{ 
+                return res.status(200).json({
+                    result:"Status changed successfully"
+            });
+            }).catch((e)=>{
+                throw "Error while changing status";
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });  
+}
 
 
  
