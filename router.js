@@ -34,6 +34,7 @@ module.exports= function(app){
     apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
     apiRoutes.get('/admin/seller',auth.requireAdminPermission,adminAuthController.GetSeller);
     apiRoutes.post('/admin/seller/changestatus',auth.requireAdminPermission,adminAuthController.ChangeSellerStatus);
+    apiRoutes.post('/admin/driver/changestatus',auth.requireAdminPermission,adminAuthController.ChangeDriverStatus);
 
 
     //driver APIs
