@@ -14,7 +14,7 @@ module.exports= function(app){
 
     //test APIs 
     apiRoutes.get('/test/hello',testController.getRequest);
-    apiRoutes.post('/test/helo',testController.postRequest);
+    apiRoutes.post('/test/hello',testController.postRequest);
 
     //seller APIs
     apiRoutes.post('/seller/signup',sellerAuthController.Signup);
@@ -27,14 +27,16 @@ module.exports= function(app){
     
     //admin APIs 
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
-    apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
-    apiRoutes.get('/admin/order',auth.requireAdminPermission,OrderController.GetOrder);
-
+    
     //Admin get request to get driver and seller details;
+    apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
     apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
     apiRoutes.get('/admin/seller',auth.requireAdminPermission,adminAuthController.GetSeller);
     apiRoutes.post('/admin/seller/changestatus',auth.requireAdminPermission,adminAuthController.ChangeSellerStatus);
     apiRoutes.post('/admin/driver/changestatus',auth.requireAdminPermission,adminAuthController.ChangeDriverStatus);
+     //admin order previledge   
+    apiRoutes.get('/admin/order',auth.requireAdminPermission,OrderController.GetOrder);
+    apiRoutes.post('/admin/order/assign',auth.requireAdminPermission,OrderController.AssignOrder);
 
 
     //driver APIs

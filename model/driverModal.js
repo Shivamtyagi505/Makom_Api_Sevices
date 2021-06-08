@@ -29,6 +29,9 @@ const DriverSchema = new Schema({
         type: String,
         required:true
     },
+    orders:{
+        type:[String]
+    },
     city: {
         type: String,
         required:true

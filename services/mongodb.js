@@ -71,16 +71,19 @@ async function readAdminByEmail(email){
     var data ={
         email:email
     };
-    try{
-       await Admin.findOne(data,function(err,result){
-        if(!err){
-            user=result;
-        } 
-        });
-    }catch(err){
-        log.dbLog('readUser:' + email, err);
-    } 
+    await Admin.findOne(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log(result);  
+            user=result; 
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        }); 
     return user;
+ 
 }
 
 //read admin by id
@@ -110,15 +113,17 @@ async function readDriverByEmail(email){
     var data ={
         email:email
     };
-    try{
-       await Driver.findOne(data,function(err,result){
-        if(!err){
-            user=result;
-        } 
-        });
-    }catch(err){
-        log.dbLog('readUser:' + email, err);
-    } 
+    await Driver.findOne(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log(result);  
+            user=result; 
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        });  
     return user;
 }
 
@@ -129,17 +134,17 @@ async function readDriverById(uuid){
     var data ={
         uuid:uuid
     };
-    try{
-       await Driver.findOne(data,function(err,result){
-         console.log(result);  
-        if(!err){
+    await Driver.findOne(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log(result);  
             user=result; 
-        } 
-        });
-
-    }catch(err){
-        log.dbLog('readUser:' + id, err);
-    } 
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        });   
     return user;
 }
 //all drivers

@@ -73,6 +73,37 @@ exports.GetOrder = async function(req,res,next){
     }
 }
 
+//assign order to driver
+exports.AssignOrder = async function(req,res,next){
+    let driverid = req.body.driverid;
+    let orderid=req.body.orderid;
+    if(driverid&&orderid){
+        database.readOrderById(orderid).then((order)=>{
+            if(order!=null){
+            database.readDriverById(driverid).then((driver)=>{
+            let update_driver=driver;
+            update_driver.orders.push(orderid);
+            update_driver.save();
+            console.log("order provided to the driver");
+            }).catch((e)=>{
+                console.log(e);
+                throw "Unable to find the driver by id"
+            });         
+            } 
+        }).catch((e)=>{
+            console.log(e);
+            throw "No order found";
+        });
+    } else{
+        return res.status(401).json({
+            error: "Provide a order id and driver id"
+        });
+    }
+
+  
+}
+
+
  
 
  
