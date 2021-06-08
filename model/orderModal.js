@@ -23,9 +23,6 @@ const OrderSchema = new Schema({
         type:String,
         required:true
     },
-    driverid: {
-        type: String, 
-    },
     receivername: {
         type: String,
         required: true,
@@ -41,6 +38,10 @@ const OrderSchema = new Schema({
     payment: {
         type: String,
         required: true,
+    }, 
+    status:{
+        type:String,
+        required:true,
     },
     currentlocation: {
         type: PlaceSchema,

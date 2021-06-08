@@ -33,6 +33,9 @@ const SellerSchema = new Schema({
         type: String,
         required:true
     },
+    orders:{
+        type:[String]
+    },
     state: {
         type: String,
         required:true

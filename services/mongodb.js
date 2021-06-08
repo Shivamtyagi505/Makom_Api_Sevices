@@ -33,17 +33,17 @@ async function readSellerById(uuid){
     var data ={
         uuid:uuid
     };
-    try{
-       await Seller.findOne(data,function(err,result){
-         console.log(result);  
-        if(!err){
+    await Seller.findOne(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log(result);  
             user=result; 
-        } 
-        });
-
-    }catch(err){
-        log.dbLog('readUser:' + id, err);
-    } 
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        }); 
     return user;
 }
 //all sellers
@@ -159,6 +159,41 @@ async function readAllDrivers(){
     return drivers;
 }
 
+//read order by id
+async function readOrderById(orderid){ 
+    var order=null; 
+    var data ={
+        orderid:orderid
+    };
+    try{
+       await Order.findOne(data,function(err,result){
+         console.log(result);  
+        if(!err){
+            order=result; 
+        } 
+        });
+
+    }catch(err){
+        log.dbLog('readOrder:' + id, err);
+    } 
+    return order;
+}
+//all orders
+async function readAllOrders(){
+    var orders;
+    await Order.find({},function(err,result){
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("getting all drivers");
+            orders =result.map((odr) => odr.orderid);; 
+        }
+
+    }).catch((e)=>{
+        log.dbLog('readUser:' + id, err);    
+    });
+    return orders;
+}
 
 /***Write Queries ***/
 
@@ -179,7 +214,7 @@ async function createSeller(seller){
     return db_user;
 }
  //update seller data
-async function UpdateSeller(user,name,phone,address,city,state){
+async function UpdateSeller(user,name,phone,address,city,state,order){
     try { 
         if (name) {
           user.name = name;
@@ -193,10 +228,14 @@ async function UpdateSeller(user,name,phone,address,city,state){
         if (city) {
           user.city = city;
         }
-        
         if (state) {
             user.state = state;
-          } 
+          }
+          if(order){
+              console.log("order working");
+              user.orders.push(order);
+          }
+
         await user.save();
         return user;
       } catch (err) {
@@ -240,11 +279,18 @@ async function ChangeSellerStatus(seller){
 
  
 //order
-async function createOrder(OrderPlace){
-    var order_details;
-    await OrderPlace.save().then((user)=>{
+async function createOrder(OrderPlace,user){
+    var order_details; 
+    console.log(OrderPlace);
+    await OrderPlace.save().then((ordr)=>{
         console.log("Order Create successfully");
-        order_details=user;
+        UpdateSeller(user,null,null,null,null,null,ordr.orderid).then((res)=>{
+        order_details=ordr;
+        }).catch((err)=>{
+            console.log("error while saving the order to seller db");
+        return null;         
+        });
+        order_details=ordr;
         return order_details;
     }).catch((err)=>{
         console.log("Error while  Creating order")  
@@ -255,17 +301,23 @@ async function createOrder(OrderPlace){
 }
 
 module.exports={
+    //seller modules
     createSeller,
     readSellerByEmail,
     readSellerById,
     readAllSellers,
     UpdateSeller,
     ChangeSellerStatus,
+    //admin modules
     readAdminByEmail,
     readAdminById,
+    //driver modules
     readDriverByEmail,
     readDriverById,
     createDriver,
     readAllDrivers,
-    createOrder
+    //order modules
+    createOrder,
+    readOrderById,
+    readAllOrders
 }

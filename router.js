@@ -21,9 +21,14 @@ module.exports= function(app){
     apiRoutes.post('/seller/signin',sellerAuthController.Signin);
     apiRoutes.get('/seller/profile',auth.requireSellerAuth,sellerAuthController.GetProfile);
     apiRoutes.post('/seller/profile',auth.requireSellerAuth,sellerAuthController.UpdateProfile);
+    apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
+   
+   
+    
     //admin APIs 
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
     apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
+    apiRoutes.get('/admin/order',auth.requireAdminPermission,OrderController.GetOrder);
 
     //Admin get request to get driver and seller details;
     apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
@@ -35,10 +40,7 @@ module.exports= function(app){
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
     apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
     
-    //order Create APIs
-    apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
-
-
+    
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);
 }

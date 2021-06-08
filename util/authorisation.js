@@ -15,13 +15,13 @@ exports.requireSellerAuth = async function (req, res, next) {
         error: 'Forbidded',
         message: 'Token Not Found'
     }); 
-    await jwt.verify(token, AUTHSECRET, (err, result) => {
+     jwt.verify(token, AUTHSECRET, async (err, result) => {
         if (err) return res.status(401).json({
             error: "Unauthorized",
             message: err.message,
         }); 
-         database.readSellerById(result.id).then((userdata)=>{
-                req.user=userdata;
+      await database.readSellerById(result.id).then((userdata)=>{
+                 req.user=userdata;
                 next();
          }).catch((err)=>{
             console.log(err);
