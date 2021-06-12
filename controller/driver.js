@@ -69,13 +69,25 @@ exports.Signin = async function (req, res, next) {
             await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
                 if (result) {  
                     let data = {
-                        id:dbuser.uuid
+                        id:dbuser.uuid, 
                     };
+                    let auth_res={
+                        id:dbuser.uuid, 
+                        name:dbuser.name,
+                        email:dbuser.email??"",
+                        phone:dbuser.phone??"",
+                        address:dbuser.address??"",
+                        city:dbuser.city??"",
+                        state:dbuser.state??"",
+                        order:dbuser.order,
+                        isblocked:dbuser.isblocked
+                    }
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     return res.status(200).json({
                         message: "Successfully logged in",
                         details: authToken, 
+                        user:auth_res
                     });
                 } else {
                     return res.status(401).json({
