@@ -25,9 +25,16 @@ const SellerSchema = new Schema({
         type: String,
         required:true
     },
+    category:{
+        type:String,
+        required:true
+    },
     phone: {
         type: String,
         required:true
+    },
+    products:{
+        type:[String],
     },
     city: {
         type: String,

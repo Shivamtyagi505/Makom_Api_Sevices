@@ -3,8 +3,11 @@ const express = require('express');
 const testController = require('./controller/test');
 const sellerAuthController = require('./controller/seller');
 const adminAuthController = require('./controller/admin');
+
+const ProductController = require('./controller/product');
 const driverAuthController = require('./controller/driver');
 const OrderController =  require('./controller/order');
+
 const auth = require('./util/authorisation');
 
 
@@ -22,6 +25,10 @@ module.exports= function(app){
     apiRoutes.get('/seller/profile',auth.requireSellerAuth,sellerAuthController.GetProfile);
     apiRoutes.post('/seller/profile',auth.requireSellerAuth,sellerAuthController.UpdateProfile);
     apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
+    apiRoutes.post('/seller/product/create',auth.requireSellerAuth,ProductController.CreateProduct);    
+    apiRoutes.get('/seller/product',auth.requireSellerAuth,ProductController.GetProducts);
+
+
    
    
     
@@ -43,6 +50,8 @@ module.exports= function(app){
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
     apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
     
+    //fetch order by id
+    apiRoutes.get('/order',auth.requireCommonAuth,OrderController.GetOrderIdOnly);
     
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);

@@ -23,6 +23,7 @@ exports.Signup = function (req, res, next) {
                 uuid:uuid, 
                 email:req.body.email,
                 name:req.body.name,
+                category:req.body.category,
                 phone:req.body.phone,
                 address:req.body.address,
                 password:hash,
@@ -56,11 +57,13 @@ exports.Signup = function (req, res, next) {
 
 exports.Signin = async function (req, res, next) {
     var dbuser = null;
+    console.log(req.body.email);
     try {
         //finding the seller in database from the email provided.
         await database.readSellerByEmail(req.body.email).then((val) => {
             dbuser = val;
         }).catch((e) => {
+            console.log("Error while getting user from email");
             return res.status(401).json({
                 error: DBERROR
             });
@@ -71,16 +74,18 @@ exports.Signin = async function (req, res, next) {
             await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
                 if (result) {  
                     let data = {
-                        uuid:dbuser.uuid};
+                        id:dbuser.uuid};
                     let auth_data={
                         uuid:dbuser.uuid,
                         name:dbuser.name,
                         email:dbuser.email,
                         phone:dbuser.phoneNumber,
                         address:dbuser.address,
+                        category:dbuser.category,
                         city:dbuser.city,
                         state:dbuser.state,
-                        order:dbuser.order,
+                        order:dbuser.orders,
+                        products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
                         };
@@ -109,6 +114,7 @@ exports.Signin = async function (req, res, next) {
 };
 exports.GetProfile = async function(req,res,next){
     var user = req.user;
+
     var user_data={
         uuid:user.uuid,
         name:user.name,
@@ -117,6 +123,8 @@ exports.GetProfile = async function(req,res,next){
         address:user.address??"",
         city:user.city??"",
         state:user.state??"",
+        orders:user.orders,
+        products:user.products,
     }
     return res.status(200).json({
        user:user_data
