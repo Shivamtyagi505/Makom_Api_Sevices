@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+ 
 
 /*** Driver Schema ***/
 const DriverSchema = new Schema({
@@ -43,7 +43,7 @@ const DriverSchema = new Schema({
     isblocked:{
         type:Boolean,
         required:true,
-    },
+    }, 
 }, {
     timestamps: true,
 });

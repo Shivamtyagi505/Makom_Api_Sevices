@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-
-
+const Schema = mongoose.Schema; 
 /*** Seller Schema ***/
 const SellerSchema = new Schema({
     uuid: {
@@ -54,8 +52,7 @@ const SellerSchema = new Schema({
     isblocked:{
         type:Boolean,
         required:true,
-    }
-
+    }, 
 }, {
     timestamps: true,
 });

@@ -54,7 +54,21 @@ async function readAllSellers(){
             throw "Database error";
         } else {
             console.log("getting all drivers");
-            sellers =result.map((user) => user.uuid);; 
+            sellers =result.map((dbuser) => {return {
+                uuid:dbuser.uuid,
+                name:dbuser.name,
+                email:dbuser.email,
+                phone:dbuser.phone,
+                address:dbuser.address,
+                category:dbuser.category,
+                city:dbuser.city,
+                state:dbuser.state,
+                order:dbuser.orders,
+                products:dbuser.products,
+                isblocked:dbuser.isblocked,
+                isverified:dbuser.isverified,
+                activity : dbuser.activity,
+            }});; 
         }
 
     }).catch((e)=>{
@@ -153,7 +167,18 @@ async function readAllDrivers(){
             throw "Database error";
         } else {
             console.log("getting all drivers");
-            drivers =result.map((user) => user.uuid);; 
+            drivers =result.map((val) => {
+                return {
+                uuid: val.uuid,
+                name: val.name,
+                email: val.email,
+                phone: val.phone,
+                address: val.address,
+                city:val.city ,
+                state:val.state
+                }
+            });
+
         }
 
     }).catch((e)=>{
@@ -190,7 +215,7 @@ async function readAllOrders(){
             throw "Database error";
         } else {
             console.log("getting all drivers");
-            orders =result.map((odr) => odr.orderid);; 
+            orders =result; 
         }
 
     }).catch((e)=>{
