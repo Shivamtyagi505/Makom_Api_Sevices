@@ -80,7 +80,8 @@ exports.Signin = async function (req, res, next) {
                         city:dbuser.city??"",
                         state:dbuser.state??"",
                         order:dbuser.order,
-                        isblocked:dbuser.isblocked
+                        isblocked:dbuser.isblocked,
+                        activity:dbuser.activity
                     }
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
