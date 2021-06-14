@@ -72,7 +72,26 @@ exports.GetOrder = async function(req,res,next){
         });
     }
 }
-
+exports.GetOrderIdOnly = async function(req,res,next){
+    let id = req.query.id;
+    var allorders=[];
+    if(id!=null){
+        database.readOrderById(id).then((val)=>{
+            return res.status(200).json({
+                orders: val
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request invalid id"
+            });
+        });
+    }else{
+        return res.status(401).json({
+            error: "query parameter <id> is required"
+        });
+    }
+}
 //assign order to driver
 exports.AssignOrder = async function(req,res,next){
     let driverid = req.body.driverid;

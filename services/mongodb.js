@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const Seller = require('../model/sellerModal');
 const Admin = require('../model/adminModal');
 const Driver = require('../model/driverModal');
-const Order = require('../model/orderModal')
+const Order = require('../model/orderModal');
+const Product = require('../model/productModal');
 
 //UTILS
 const log = require('../util/logger')
@@ -219,7 +220,7 @@ async function createSeller(seller){
     return db_user;
 }
  //update seller data
-async function UpdateSeller(user,name,phone,address,city,state,order){
+async function UpdateSeller(user,name,phone,address,city,state,order,product_id){
     try { 
         if (name) {
           user.name = name;
@@ -236,10 +237,12 @@ async function UpdateSeller(user,name,phone,address,city,state,order){
         if (state) {
             user.state = state;
           }
-          if(order){
-              console.log("order working");
-              user.orders.push(order);
+          if(product_id){ 
+              user.products.push(product_id);
           }
+          if(order){ 
+            user.orders.push(order);
+        }
 
         await user.save();
         return user;
@@ -321,6 +324,46 @@ async function createOrder(OrderPlace,user){
     return order_details;
 }
 
+//products 
+
+async function createProduct(product,user){
+    var product_details;  
+    await product.save().then((prdct)=>{
+        console.log("product Create successfully");
+        UpdateSeller(user,null,null,null,null,null,null,prdct.product_id).then((res)=>{
+        product_details=prdct;
+        }).catch((err)=>{
+            console.log("error while saving the product to seller db");
+        return null;         
+        }); 
+        product_details=prdct;
+        return product_details;
+    }).catch((err)=>{
+        console.log("Error while  Creating product")  
+        throw new Error(err);
+        return null;
+    }); 
+    return product_details;
+}
+async function getAllProducts(ids){
+    var products=[];
+    await Product.find({
+        'product_id' :  ids
+    },function(err,result){
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("getting all products");
+             products=result; 
+        }
+
+    }).catch((e)=>{
+        log.dbLog('readUser:' + id, err);    
+    });
+    return products;
+
+}
+
 module.exports={
     //seller modules
     createSeller,
@@ -341,5 +384,8 @@ module.exports={
     //order modules
     createOrder,
     readOrderById,
-    readAllOrders
+    readAllOrders,
+    //product 
+    createProduct,
+    getAllProducts
 }

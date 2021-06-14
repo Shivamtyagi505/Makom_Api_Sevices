@@ -3,6 +3,33 @@ const database = require('../services/mongodb');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 
+exports.requireCommonAuth = async function(req,res,next){
+    const authHeader = req.headers['authorization'];
+    if (authHeader == null) return res.status(401).json({
+        error: 'Forbidded',
+        message: 'Token Not Found'
+    });
+    const token = authHeader.split(' ')[1];
+    if (token == null) return res.status(401).json({
+        error: 'Forbidded',
+        message: 'Token Not Found'
+    }); 
+    jwt.verify(token, AUTHSECRET, async (err, result) => {
+        if (err) {
+            jwt.verify(token, ADMINSECRET, async (err, result) => {
+                if (err) {
+                    return res.status(401).json({
+                        error: "Unauthorized",
+                        message: err.message,
+                    });
+                } 
+            });
+
+        }
+   });
+   next();
+}   
+
 //seller
 exports.requireSellerAuth = async function (req, res, next) {
     const authHeader = req.headers['authorization'];
@@ -15,13 +42,14 @@ exports.requireSellerAuth = async function (req, res, next) {
         error: 'Forbidded',
         message: 'Token Not Found'
     }); 
-     jwt.verify(token, AUTHSECRET, async (err, result) => {
-        if (err) return res.status(401).json({
+     jwt.verify(token, AUTHSECRET,async (err, result) => {
+         if (err) return res.status(401).json({
             error: "Unauthorized",
             message: err.message,
         }); 
+
       await database.readSellerById(result.id).then((userdata)=>{
-                 req.user=userdata;
+                req.user=userdata; 
                 next();
          }).catch((err)=>{
             console.log(err);
@@ -30,6 +58,11 @@ exports.requireSellerAuth = async function (req, res, next) {
             });    
          });   
 
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).json({
+            error:"Internal server error"
+        });    
     });
 }
 //seller
