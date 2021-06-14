@@ -38,14 +38,19 @@ const OrderSchema = new Schema({
     payment: {
         type: String,
         required: true,
+    },
+    assignedto:{
+        type:String
     }, 
     status:{
         type:String,
         required:true,
     },
+    products:{
+        type:[String],
+    },
     currentlocation: {
         type: PlaceSchema,
-        required: true,
     },
     pickofflocation: {
         type: PlaceSchema,

@@ -79,7 +79,7 @@ exports.Signin = async function (req, res, next) {
                         address:dbuser.address??"",
                         city:dbuser.city??"",
                         state:dbuser.state??"",
-                        order:dbuser.order,
+                        order:dbuser.orders,
                         isblocked:dbuser.isblocked
                     }
                     //generating and sending the auth token as it will be required for furthur requests.
@@ -104,6 +104,49 @@ exports.Signin = async function (req, res, next) {
         });
     }
 };
+
+//get drivers or particular driver by id;
+exports.GetDriver = async function(req,res,next){
+    var ids = req.body.ids;
+    var alldrivers=[];
+    if(ids!=null){
+        database.readDriverByIds(ids).then((result)=>{
+            alldrivers = result.map(val=>{
+                return {
+                    uuid:val.uuid,
+                    name:val.name,
+                    email:val.email??"",
+                    phone:val.phone??"",
+                    address:val.address??"",
+                    city:val.city??"",
+                    state:val.state??"",
+                }
+            })
+            return res.status(200).json({
+                drivers: alldrivers
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }else{
+        database.readAllDrivers().then((val)=>{
+            return res.status(200).json({
+                drivers: val
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }
+}
+
+
+
 exports.GetProfile = async function(req,res,next){
     var user = req.user;
     var user_data={
@@ -114,9 +157,59 @@ exports.GetProfile = async function(req,res,next){
         address:user.address??"",
         city:user.city??"",
         state:user.state??"",
+        orders:user.orders,
     }
     return res.status(200).json({
        user:user_data
     });
+}
+
+
+//driver accept or decline the order
+
+exports.OrderVerify = async function(req,res,next){
+    var user = req.user;  
+    let orderid=req.body.orderid;
+    let action= req.body.action;
+ 
+    if(orderid&&action&&action=="accepted"||action=="rejected"){
+        database.readOrderById(orderid).then((order)=>{
+            if(!order){
+                res.status(401).json({
+                    error:"Unable to find your order"
+                })
+            }
+            if(action=="rejected"){
+                res.status(200).json({
+                    status:"Request successfully placed"    
+                });
+            }else if(action=="accepted"&&orderid){ 
+                    order.status="assigned";
+                    order.assignedto=user.uuid;
+                    order.save().then((result)=>{
+                       order=result;
+                    }).catch((err)=>{
+                        throw "Error while approving the order"
+                    }); 
+                    res.status(200).json({
+                        status:"Order has been successfully assigned",
+                        order:order 
+                    }); 
+            }else {
+                res.status(401).json({
+                    status:"Missing order id or imporper action"
+                });
+               
+            } 
+        }).catch((e)=>{
+            console.log(e);
+            throw "No order found";
+        });
+    } else{
+        return res.status(401).json({
+            error: "Provide admin 'action' either approved or rejected"
+        });
+
+}
 }
 

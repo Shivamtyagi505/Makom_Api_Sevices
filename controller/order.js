@@ -22,8 +22,8 @@ exports.CreateOrder = async function (req, res, next) {
                 receiverphone:req.body.receiverphone,
                 sellerid:req.user.uuid, 
                 payment:req.body.payment, 
-                status:req.body.status, 
-                currentlocation: req.body.currentlocation,
+                products:req.body.products,
+                status: "Placed",  
                 pickofflocation:req.body.pickofflocation,
                 destinationlocation:req.body.destinationlocation,
             });  
@@ -45,13 +45,15 @@ exports.CreateOrder = async function (req, res, next) {
         }
    
 //get order or particular order by id;
+ //get drivers or particular driver by id;
 exports.GetOrder = async function(req,res,next){
-    let id = req.query.id;
+    var ids = req.body.ids;
     var allorders=[];
-    if(id!=null){
-        database.readOrderById(id).then((val)=>{
+    if(ids!=null){
+        database.readOrderByIds(ids).then((result)=>{
+            allorders = result;
             return res.status(200).json({
-                orders: val
+                orders: allorders
             });
         }).catch((e)=>{
             console.log(e);
@@ -72,42 +74,55 @@ exports.GetOrder = async function(req,res,next){
         });
     }
 }
-exports.GetOrderIdOnly = async function(req,res,next){
-    let id = req.query.id;
-    var allorders=[];
-    if(id!=null){
-        database.readOrderById(id).then((val)=>{
-            return res.status(200).json({
-                orders: val
-            });
-        }).catch((e)=>{
-            console.log(e);
-            return res.status(401).json({
-                error: "Bad Request invalid id"
-            });
-        });
-    }else{
-        return res.status(401).json({
-            error: "query parameter <id> is required"
-        });
-    }
-}
-//assign order to driver
-exports.AssignOrder = async function(req,res,next){
+
+//verify order to driver
+exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;
     let orderid=req.body.orderid;
-    if(driverid&&orderid){
+    let action= req.body.action;
+ 
+    if(orderid&&action&&action=="approved"||action=="rejected"){
         database.readOrderById(orderid).then((order)=>{
-            if(order!=null){
-            database.readDriverById(driverid).then((driver)=>{
-            let update_driver=driver;
-            update_driver.orders.push(orderid);
-            update_driver.save();
-            console.log("order provided to the driver");
-            }).catch((e)=>{
-                console.log(e);
-                throw "Unable to find the driver by id"
-            });         
+            if(action=="rejected"){
+                order.status="rejected";
+                order.save().then((result)=>{ 
+                    res.status(200).json({
+                        order:result    
+                    });
+                }).catch((err)=>{
+                    res.status(401).json({
+                        error:"Error while updating the order"    
+                    }); 
+                });
+                //update the order status to approved and assign it to the driver
+
+            }else if(action=="approved"&&driverid){
+                database.readDriverById(driverid).then((driver)=>{
+                    let update_driver=driver;
+                    order.status="approved";
+                    order.save().then((result)=>{
+                       order=result;
+                    }).catch((err)=>{
+                        throw "Error while approving the order"
+                    });
+                    update_driver.orders.push(orderid);
+                    update_driver.save().then((drvr)=>{
+                        update_driver=drvr;
+                    }); 
+                    res.status(200).json({
+                        status:"Order has been successfully approved",
+                        order:order 
+                    });
+                    }).catch((e)=>{
+                        console.log(e);
+                        throw "Unable to find the driver by id"
+                    });
+
+            }else {
+                res.status(401).json({
+                    status:"Missing driverid"
+                });
+               
             } 
         }).catch((e)=>{
             console.log(e);
@@ -115,7 +130,7 @@ exports.AssignOrder = async function(req,res,next){
         });
     } else{
         return res.status(401).json({
-            error: "Provide a order id and driver id"
+            error: "Provide admin 'action' either approved or rejected"
         });
     }
 

@@ -44,6 +44,7 @@ exports.CreateProduct = async function (req, res, next) {
         }
 
         //fetch all seller products
+        
         exports.GetProducts = async function(req,res,next){
             let ids = req.user.products;
             database.getAllProducts(ids).then((val)=>{

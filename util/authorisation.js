@@ -48,8 +48,8 @@ exports.requireSellerAuth = async function (req, res, next) {
             message: err.message,
         }); 
 
-      await database.readSellerById(result.id).then((userdata)=>{
-                req.user=userdata; 
+      await database.readSellerByIds(result.id).then((userdata)=>{
+                req.user=userdata[0]; 
                 next();
          }).catch((err)=>{
             console.log(err);
@@ -82,8 +82,8 @@ exports.requireDriverAuth = async function (req, res, next) {
             error: "Unauthorized",
             message: err.message,
         }); 
-         database.readDriverById(result.id).then((userdata)=>{
-                req.user=userdata;
+         database.readDriverByIds(result.id).then((userdata)=>{
+                req.user=userdata[0];
                 next();
          }).catch((err)=>{
             console.log(err);

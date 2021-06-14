@@ -79,7 +79,7 @@ exports.Signin = async function (req, res, next) {
                         uuid:dbuser.uuid,
                         name:dbuser.name,
                         email:dbuser.email,
-                        phone:dbuser.phoneNumber,
+                        phone:dbuser.phone,
                         address:dbuser.address,
                         category:dbuser.category,
                         city:dbuser.city,
@@ -112,6 +112,53 @@ exports.Signin = async function (req, res, next) {
         });
     }
 };
+
+//get drivers or particular driver by id;
+exports.GetSeller = async function(req,res,next){
+    var ids = req.body.ids;
+    var allsellers=[];
+    if(ids!=null){
+        database.readSellerByIds(ids).then((result)=>{
+            allsellers = result.map(dbuser=>{
+                return {
+                        uuid:dbuser.uuid,
+                        name:dbuser.name,
+                        email:dbuser.email,
+                        phone:dbuser.phone,
+                        address:dbuser.address,
+                        category:dbuser.category,
+                        city:dbuser.city,
+                        state:dbuser.state,
+                        order:dbuser.orders,
+                        products:dbuser.products,
+                        isblocked:dbuser.isblocked,
+                        isverified:dbuser.isverified,
+                }
+            })
+            return res.status(200).json({
+                sellers: allsellers
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }else{
+        database.readAllSellers().then((val)=>{
+            return res.status(200).json({
+                sellers: val
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }
+}
+
+
 exports.GetProfile = async function(req,res,next){
     var user = req.user;
 
@@ -119,7 +166,7 @@ exports.GetProfile = async function(req,res,next){
         uuid:user.uuid,
         name:user.name,
         email:user.email??"",
-        phone:user.phoneNumber??"",
+        phone:user.phone??"",
         address:user.address??"",
         city:user.city??"",
         state:user.state??"",
@@ -141,7 +188,7 @@ exports.UpdateProfile = async function(req,res,next){
                 uuid:user.uuid,
                 name:user.name,
                 email:user.email,
-                phone:user.phoneNumber,
+                phone:user.phone,
                 address:user.address,
                 city:user.city,
                 state:user.state};

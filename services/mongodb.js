@@ -28,23 +28,22 @@ async function readSellerByEmail(email){
     } 
     return user;
 }
-async function readSellerById(uuid){ 
-    var user=null;
-    console.log(uuid);
+ 
+async function readSellerByIds(ids){ 
+    var user=[]; 
     var data ={
-        uuid:uuid
+        uuid:ids
     };
-    await Seller.findOne(data,function(err,result){     
+    await Seller.find(data,function(err,result){     
         if (err) {
             throw "Database error";
         } else {
-            console.log(result);  
-            user=result; 
+             user=result;
         }
         }).catch((e)=>{
           console.log(e);
           return null;          
-        }); 
+        });   
     return user;
 }
 //all sellers
@@ -129,18 +128,16 @@ async function readDriverByEmail(email){
 }
 
 //read driver by id
-async function readDriverById(uuid){ 
-    var user=null;
-    console.log(uuid);
+async function readDriverByIds(ids){ 
+    var user=[]; 
     var data ={
-        uuid:uuid
+        uuid:ids
     };
-    await Driver.findOne(data,function(err,result){     
+    await Driver.find(data,function(err,result){     
         if (err) {
             throw "Database error";
         } else {
-            console.log(result);  
-            user=result; 
+             user=result;
         }
         }).catch((e)=>{
           console.log(e);
@@ -165,25 +162,26 @@ async function readAllDrivers(){
     return drivers;
 }
 
-//read order by id
-async function readOrderById(orderid){ 
-    var order=null; 
+//read order by ids
+async function readOrderByIds(ids){ 
+    var orders=[]; 
     var data ={
-        orderid:orderid
+        orderid:ids
     };
-    try{
-       await Order.findOne(data,function(err,result){
-         console.log(result);  
-        if(!err){
-            order=result; 
-        } 
-        });
-
-    }catch(err){
-        log.dbLog('readOrder:' + id, err);
-    } 
-    return order;
+    await Order.find(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+             orders=result;
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        });   
+    return orders;
 }
+
+ 
 //all orders
 async function readAllOrders(){
     var orders;
@@ -368,7 +366,7 @@ module.exports={
     //seller modules
     createSeller,
     readSellerByEmail,
-    readSellerById,
+    readSellerByIds,
     readAllSellers,
     UpdateSeller,
     ChangeSellerStatus, 
@@ -377,13 +375,13 @@ module.exports={
     readAdminById,
     //driver modules
     readDriverByEmail,
-    readDriverById,
+    readDriverByIds,
     createDriver,
     readAllDrivers,
     ChangDriverStatus,
     //order modules
     createOrder,
-    readOrderById,
+    readOrderByIds,
     readAllOrders,
     //product 
     createProduct,

@@ -19,39 +19,56 @@ module.exports= function(app){
     apiRoutes.get('/test/hello',testController.getRequest);
     apiRoutes.post('/test/hello',testController.postRequest);
 
-    //seller APIs
+    //seller APIs    
+    //once signup a request will be send to admin to verify account
     apiRoutes.post('/seller/signup',sellerAuthController.Signup);
     apiRoutes.post('/seller/signin',sellerAuthController.Signin);
+
+    //get profile of user based on jwt decoding.
     apiRoutes.get('/seller/profile',auth.requireSellerAuth,sellerAuthController.GetProfile);
+    //update profile
     apiRoutes.post('/seller/profile',auth.requireSellerAuth,sellerAuthController.UpdateProfile);
+    
+    //similar to driver pass a list of ids or no ids to receive ids of all driver
+    apiRoutes.get('/seller/details',auth.requireCommonAuth,sellerAuthController.GetSeller);
+    
+    //create a new order
+
     apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
     apiRoutes.post('/seller/product/create',auth.requireSellerAuth,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.requireSellerAuth,ProductController.GetProducts);
+    
 
-
-   
-   
     
     //admin APIs 
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
     
     //Admin get request to get driver and seller details;
     apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
-    apiRoutes.get('/admin/driver',auth.requireAdminPermission,adminAuthController.GetDriver);
-    apiRoutes.get('/admin/seller',auth.requireAdminPermission,adminAuthController.GetSeller);
+
+
+    
+    //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.requireAdminPermission,adminAuthController.ChangeSellerStatus);
+    //block or unblock a seller
     apiRoutes.post('/admin/driver/changestatus',auth.requireAdminPermission,adminAuthController.ChangeDriverStatus);
-     //admin order previledge   
-    apiRoutes.get('/admin/order',auth.requireAdminPermission,OrderController.GetOrder);
-    apiRoutes.post('/admin/order/assign',auth.requireAdminPermission,OrderController.AssignOrder);
+    //admin order previledge 
+    // if id as a query parameter is passed then info regarding single order will be provided either response will be whole list of orders.
+    
+    //assign a order to driver.
+    apiRoutes.post('/admin/order/verify',auth.requireAdminPermission,OrderController.VerifyOrder);
 
 
     //driver APIs
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
     apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
+    apiRoutes.post('/driver/order/verify',auth.requireDriverAuth,driverAuthController.OrderVerify);
+    // if id as a query parameter is passed then info regarding single driver will be provided either response will be whole list of sellers. 
+    apiRoutes.get('/driver/details',auth.requireCommonAuth,driverAuthController.GetDriver);
+
     
     //fetch order by id
-    apiRoutes.get('/order',auth.requireCommonAuth,OrderController.GetOrderIdOnly);
+    apiRoutes.get('/order/details',auth.requireCommonAuth,OrderController.GetOrder);
     
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);
