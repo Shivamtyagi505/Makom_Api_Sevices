@@ -54,6 +54,43 @@ exports.Signin = async function (req, res, next) {
         });
     }
 };
+//create a new admin
+exports.NewAdmin = function (req, res, next) {
+    //encrypting the plain password 
+    bcrypt.hash(req.body.password, 10).then(
+        (hash) => {
+            let id = nanoid(IDSIZE);
+            let uuid = mongoose.Types.ObjectId(id);
+             let admin = new Admin({
+                uuid:uuid, 
+                email:req.body.email,
+                name:req.body.name, 
+                password:hash,
+            }); 
+            database.createAdmin(admin).then((val) => {
+                if (val == null) {
+                    throw Error("Error while setting account");
+                } else {
+                    res.status(201).json({
+                        message: "admin account successfully created."
+                    });
+                }
+            }).catch((err) => {
+                console.log(err);
+                res.status(401).json({
+                    error: DBERROR
+                });
+            });
+        }
+    ).catch((err) => {
+        console.log(err);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+}
+
+
 
   
 // update seller status by id;

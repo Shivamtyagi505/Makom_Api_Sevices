@@ -225,7 +225,20 @@ async function readAllOrders(){
 }
 
 /***Write Queries ***/
-
+//admin
+async function createAdmin(admin){
+    var db_user;
+    await admin.save().then((user)=>{
+        console.log("User saved successfully");
+        db_user=user;
+        return user;
+    }).catch((err)=>{
+        console.log("Error while adding user to db")  
+        throw new Error(err);
+        return null;
+    }); 
+    return db_user;
+}
 
 
 //seller
@@ -398,6 +411,7 @@ module.exports={
     //admin modules 
     readAdminByEmail,
     readAdminById,
+    createAdmin,
     //driver modules
     readDriverByEmail,
     readDriverByIds,

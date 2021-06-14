@@ -42,6 +42,8 @@ module.exports= function(app){
     
     //admin APIs 
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
+   
+    apiRoutes.post('/admin/newadmin',auth.requireAdminPermission,adminAuthController.NewAdmin);
     
     //Admin get request to get driver and seller details;
     apiRoutes.post('/admin/newdriver',auth.requireAdminPermission,driverAuthController.Signup);
