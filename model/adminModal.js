@@ -21,6 +21,9 @@ const AdminSchema = new Schema({
         type: String,
         required: true,
     }, 
+    fcm_token:{
+        type:String
+    }
     
 }, {
     timestamps: true,

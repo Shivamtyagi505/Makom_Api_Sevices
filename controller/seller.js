@@ -91,10 +91,13 @@ exports.Signin = async function (req, res, next) {
                         };
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
+                    dbuser.fcm_token=req.body.fcm_token;
+                    dbuser.save().then((result)=>{ 
                     return res.status(200).json({
                         message: "Successfully logged in",
                         details: authToken, 
                         user:auth_data
+                    });
                     });
                 } else {
                     return res.status(401).json({

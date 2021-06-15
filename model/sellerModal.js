@@ -52,7 +52,10 @@ const SellerSchema = new Schema({
     isblocked:{
         type:Boolean,
         required:true,
-    }, 
+    },  
+    fcm_token:{
+        type:String
+    }
 }, {
     timestamps: true,
 });
