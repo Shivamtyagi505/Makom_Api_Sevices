@@ -117,7 +117,7 @@ exports.Signin = async function (req, res, next) {
     }
 };
 
-//get drivers or particular driver by id;
+//get selller or particular seller by id;
 exports.GetSeller = async function(req,res,next){
     var ids = req.body.ids;
     var allsellers=[];
