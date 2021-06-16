@@ -18,9 +18,13 @@ exports.CreateOrder = async function (req, res, next) {
             let uuid = mongoose.Types.ObjectId(id);
              let OrderPlace = new Order({
                 orderid:uuid, 
-                receivername:req.body.receivername,
-                receiverphone:req.body.receiverphone,
-                sellerid:req.user.uuid, 
+                receiver:req.body.receiver, 
+                seller:{
+                    uuid:req.user.uuid,
+                    name:req.user.name,
+                    phone:req.user.phone,
+                    email:req.user.email
+                }, 
                 payment:req.body.payment, 
                 products:req.body.products,
                 status: "Placed",  

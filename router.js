@@ -36,6 +36,8 @@ module.exports= function(app){
     //create a new order
 
     apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
+    apiRoutes.post('/seller/myorders',auth.requireSellerAuth,sellerAuthController.GetMyOrders,OrderController.GetOrder);
+
     apiRoutes.post('/seller/product/create',auth.requireSellerAuth,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.requireSellerAuth,ProductController.GetProducts);
     
@@ -67,11 +69,10 @@ module.exports= function(app){
     apiRoutes.get('/driver/profile',auth.requireDriverAuth,driverAuthController.GetProfile);
     apiRoutes.post('/driver/order/verify',auth.requireDriverAuth,driverAuthController.OrderVerify);
     // if id as a query parameter is passed then info regarding single driver will be provided either response will be whole list of sellers. 
-    apiRoutes.get('/driver/details',auth.requireCommonAuth,driverAuthController.GetDriver);
-
+    apiRoutes.get('/driver/details',auth.requireAdminPermission,driverAuthController.GetDriver);
     
     //fetch order by id
-    apiRoutes.get('/order/details',auth.requireCommonAuth,OrderController.GetOrder);
+    apiRoutes.get('/order/details',auth.requireAdminPermission,OrderController.GetOrder);
     
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);

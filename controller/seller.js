@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
+const OrderController =  require('../controller/order');
 
 
 
@@ -213,4 +214,11 @@ exports.UpdateProfile = async function(req,res,next){
           error: DBERROR,
         });
       });
+}
+
+
+exports.GetMyOrders = async function(req,res,next){
+    var order_ids= req.user.order;
+    req.body.ids=order_ids; 
+    next();
 }

@@ -26,7 +26,6 @@ exports.Signin = async function (req, res, next) {
         });
 
         if (dbuser != null) {
-
             //if admin exists with the current email than comparing the hash with the password field.
             await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
                 if (result) {  

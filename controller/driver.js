@@ -189,7 +189,12 @@ exports.OrderVerify = async function(req,res,next){
                 });
             }else if(action=="accepted"&&orderid){ 
                     order.status="assigned";
-                    order.assignedto=user.uuid;
+                    order.assignedto={
+                        uuid:user.uuid,
+                        name:user.name,
+                        email:user.email,
+                        phone:user.phone,
+                    };
                     order.save().then((result)=>{
                        order=result;
                     }).catch((err)=>{

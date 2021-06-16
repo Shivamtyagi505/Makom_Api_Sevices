@@ -23,24 +23,20 @@ const OrderSchema = new Schema({
         type:String,
         required:true
     },
-    receivername: {
-        type: String,
+    receiver: {
+        type: {},
         required: true,
     }, 
-    sellerid: {
-        type: String,
+    seller: {
+        type: {},
         required: true,
-    },
-    receiverphone: {
-        type: String,
-        required: true,
-    },
+    }, 
     payment: {
         type: String,
         required: true,
     },
     assignedto:{
-        type:String
+        type:{}
     }, 
     status:{
         type:String,
