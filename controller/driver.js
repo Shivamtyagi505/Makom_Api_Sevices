@@ -175,10 +175,12 @@ exports.OrderVerify = async function(req,res,next){
     var user = req.user;  
     let orderid=req.body.orderid;
     let action= req.body.action;
+    console.log(action);
+
  
     if(orderid&&action&&action=="accepted"||action=="rejected"){
-        database.readOrderById(orderid).then((order)=>{
-            if(!order){
+        database.readOrderByIds([orderid]).then((orders)=>{
+            if(!orders){
                 res.status(401).json({
                     error:"Unable to find your order"
                 })
@@ -188,6 +190,7 @@ exports.OrderVerify = async function(req,res,next){
                     status:"Request successfully placed"    
                 });
             }else if(action=="accepted"&&orderid){ 
+                     var order = orders[0];   
                     order.status="assigned";
                     order.assignedto={
                         uuid:user.uuid,

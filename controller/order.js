@@ -79,14 +79,16 @@ exports.GetOrder = async function(req,res,next){
     }
 }
 
-//verify order to driver
+//admin action to verify order and send to driver driver
 exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;
     let orderid=req.body.orderid;
     let action= req.body.action;
  
+ 
     if(orderid&&action&&action=="approved"||action=="rejected"){
-        database.readOrderById(orderid).then((order)=>{
+        database.readOrderByIds([orderid]).then((orders)=>{
+          var  order =orders[0];
             if(action=="rejected"){
                 order.status="rejected";
                 order.save().then((result)=>{ 
@@ -101,8 +103,8 @@ exports.VerifyOrder = async function(req,res,next){
                 //update the order status to approved and assign it to the driver
 
             }else if(action=="approved"&&driverid){
-                database.readDriverById(driverid).then((driver)=>{
-                    let update_driver=driver;
+                database.readDriverByIds([driverid]).then((drivers)=>{
+                    let update_driver=drivers[0];
                     order.status="approved";
                     order.save().then((result)=>{
                        order=result;
