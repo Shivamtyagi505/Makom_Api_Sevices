@@ -65,15 +65,11 @@ module.exports= function(app){
 
 
     
-    
     //fetch driver all or by id list
     apiRoutes.get('/admin/driver/details',auth.requireAdminPermission,driverAuthController.GetDriver);
     //similar to driver pass a list of ids or no ids to receive ids of all sellers
     apiRoutes.get('/admin/seller/details',auth.requireAdminAuth,sellerAuthController.GetSeller);
  
-    
-    
-    
     
     //fetch order all or by id list
     apiRoutes.get('/admin/order/details',auth.requireAdminPermission,OrderController.GetOrder);
