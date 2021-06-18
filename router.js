@@ -54,9 +54,9 @@ module.exports= function(app){
 
     
     //block or verify a seller
-    apiRoutes.post('/admin/seller/changestatus',auth.requireAdminPermission,adminAuthController.ChangeSellerStatus);
+    apiRoutes.post('/admin/seller/changestatus',auth.requireAdminAuth,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
-    apiRoutes.post('/admin/driver/changestatus',auth.requireAdminPermission,adminAuthController.ChangeDriverStatus);
+    apiRoutes.post('/admin/driver/changestatus',auth.requireAdminAuth,adminAuthController.ChangeDriverStatus);
     //admin order previledge 
     // if id as a query parameter is passed then info regarding single order will be provided either response will be whole list of orders.
     
@@ -73,6 +73,7 @@ module.exports= function(app){
     
     //fetch order all or by id list
     apiRoutes.get('/admin/order/details',auth.requireAdminPermission,OrderController.GetOrder);
+    apiRoutes.get('/admin/order/statistics',auth.requireAdminPermission,OrderController.GetOrderStatistics);
     apiRoutes.get('/admin/order/Placedetails',auth.requireAdminPermission,OrderController.GetPlacedOrder);
     //set url for API v1 group routes
     app.use('/v1/api',apiRoutes);

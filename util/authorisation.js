@@ -112,7 +112,7 @@ exports.requireAdminAuth = async function (req, res, next) {
             message: err.message,
         }); 
          database.readAdminById(result.id).then((userdata)=>{
-                req.user=userdata;
+                req.user=userdata; 
                 next();
          }).catch((err)=>{
             console.log(err);

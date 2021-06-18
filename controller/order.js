@@ -78,6 +78,60 @@ exports.GetOrder = async function(req,res,next){
         });
     }
 }
+exports.GetOrderStatistics = async function(req,res,next){
+    database.readAllOrders().then((val)=>{
+        var total= val.length;
+        var completed=[];
+        var placed=[];
+        var approved=[];
+        var assigned=[];
+        var rejected=[];
+        for (let i=0;i<total;i++){
+            var order =val[i]; 
+            if(order.status=="Completed"){
+                completed.push(order);
+            }else if(order.status=="Placed"){
+                placed.push(order);
+            }else if(order.status=="approved"){
+                approved.push(order);
+            }else if(order.status=="assigned"){
+                assigned.push(order);
+            }
+            else if(order.status=="rejected"){
+                rejected.push(order);
+            }
+        }
+        return res.status(200).json({
+            total_orders:total,
+            placed_orders:{
+                counts:placed.length,
+                orders:placed
+            },
+            completed_orders:{
+                counts:completed.length,
+                orders:completed
+            },
+            approved_by_admin:{
+                counts:approved.length,
+                orders:approved,
+            },
+            assigned_to_driver:{
+                counts:assigned.length,
+                orders:assigned
+            }, 
+            rejected_by_admin:{
+                counts:rejected.length,
+                orders:rejected
+            }
+        });
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+}
+
 
 exports.GetPlacedOrder = async function (req, res, next) {
     var status = req.body.status

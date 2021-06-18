@@ -39,7 +39,9 @@ exports.Signin = async function (req, res, next) {
                         return res.status(200).json({
                             message: "Successfully logged in",
                             details: authToken,
-                            email : email,
+                            email : result.email,
+                            name:result.name,
+                            uuid:result.uuid
                         });
                     });
                 } else {
@@ -99,38 +101,54 @@ exports.NewAdmin = function (req, res, next) {
   
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
-    let id = req.query.id;
-        database.readSellerByIds(id).then((val)=>{
-            var user_data=val;
-            user_data.isblocked=req.body.isblocked;
-           // console.log(user_data)
-            database.ChangeSellerStatus(user_data).then((result)=>{ 
-                return res.status(200).json({
-                    message:"Seller Status changed successfully"
-            });
-            }).catch((e)=>{
-                throw "Error while changing status";
-            });
+    let id = req.body.id;
+    database.readSellerByIds([id]).then((val)=>{
+         
+        if(val==null||val[0]==null){
+            return res.status(401).json({ 
+                message:"Invalid driver id",
+        });
+        }
+        var user_data=val[0];
+        user_data.isblocked=req.body.isblocked;
+         console.log(user_data)
+        database.ChangeSellerStatus(user_data).then((result)=>{ 
+            return res.status(200).json({
+                isblocked:user_data.isblocked,
+                message:"seller Status changed successfully",
+        });
+       
         }).catch((e)=>{
-            console.log(e);
-            return res.status(401).json({
-                error: "Bad Request"
-            });
-        });  
+            throw "Error while changing status";
+        });
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });  
 }
 
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
-    let id = req.query.id;
-        database.readDriverByIds(id).then((val)=>{
-            var user_data=val;
+    let id = req.body.id;
+        database.readDriverByIds([id]).then((val)=>{
+             
+            if(val==null||val[0]==null){
+                return res.status(401).json({ 
+                    message:"Invalid driver id",
+            });
+            }
+            var user_data=val[0];
             user_data.isblocked=req.body.isblocked;
-           //  console.log(user_data)
+            console.log("This is driver data")
+             console.log(user_data)
             database.ChangeDriverStatus(user_data).then((result)=>{ 
                 return res.status(200).json({
-                    user_data:user_data.isblocked,
+                    isblocked:user_data.isblocked,
                     message:"Driver Status changed successfully",
             });
+           
             }).catch((e)=>{
                 throw "Error while changing status";
             });

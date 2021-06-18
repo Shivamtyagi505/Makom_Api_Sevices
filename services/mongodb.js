@@ -150,11 +150,11 @@ async function readDriverByIds(ids){
     await Driver.find(data,function(err,result){     
         if (err) {
             throw "Database error";
-        } else {
+        } else { 
              user=result;
         }
         }).catch((e)=>{
-          console.log(e);
+          console.log("mongodb.js"+e);
           return null;          
         });   
     return user;
