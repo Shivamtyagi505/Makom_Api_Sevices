@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "makom-delivery",
+  "private_key_id": "1fc8e6fd19b39e4890a9df4689ad034f7cfd4adb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDRw+3+mUO2Dc70\nTwu+EKYPYtwuLSYaylvjvJu55k0ttcEaVNY9nJBp2qDSl55lC8OhYTnW5i2i65Rc\nhH4Vu+MiBy91LGAuTrWj46ltQCFYpw8teC8swYDG9dQvSyV6ddU5/5ytNS8VmCRG\nnFTyfYKVMm2fy4DsbQAGa23hyRDh97qsaZfrKKpSBQR4IRBvy01zx396O0PAL7Iu\nKf1m8QLX3v+HfdiKS+GXCwDgOCWzAZZ2qJardtGPn83IHJgAtP5ME37khSKdai8T\nGobiLQKXVDJA1Ix02eqElQy+rw5F8oCw5wUfldyEF5JhUAdaZImY4Re8NmH/WvyY\nkyNeVKjzAgMBAAECggEAD96jsqIpb2xjrrO3lDVnPX0XDP6ecOLECUU7f4N5wvkK\ntxwZqfHz3QZM1NHitQtVosUbyUiDGwh5TMyQoMKlCu3XPHqoe3258UBn5jDhX6HN\nR1KIjc7FQt2ApDlVCGBCIFADLE7R6pom4xlbCzjNTc38YYgAZM1US1K1A/ggaQVK\ntv4S1SYZBKC5Q5t+hikqXY7GAFtubKpZsZXibtx1pCRdJX1NXNiSJ5wLZE7ELvgy\nYJLGOhitYsxxIqgUkWfX/QDCayN1hm9Hs41d7eS6bpqhgfXEYHd7MxDC1uXAf1gS\nhSJauNZCcHlcpAjx0TKBcC6p8pXNMUP0ytzayrB7oQKBgQDuKg9fihQcStzulr2G\nDlYVah7WfCH7QN3QE/CFlAcMb8f+cdMi7zX5ER626BMD5+RhnwgoXt4rl/EG2Nbs\n0eNiFpQBxM+ATRiaeUpaXDvJkutpuTkRv3eNkmKNhgBFLXJB70L7807bkUqkKGpo\n4KNGrOP5Tt5nhSXuv4wlBN5MYQKBgQDheWwjD5maEFN0DHZe7tegy84dt5cUHswA\nCPvlXZyQ6PrxzyPjgfG5C/vY6VglFe9deKi1/QB9YJ3NW5W9AVgbv3aNSAXwa9TU\nn+KQgPOfv2rIWCSzI4owRf1JWAb6d9gsPolS3iRTwQvP+KLz2+Y23Vq6w7g/yAAY\nCYcpd+/V0wKBgB82ee9OfFY85XmLXelMxbFmyAXaHOX92VQk2NfYz5esqqxJJJ+m\ndA9hVAIqphtT79VvbzVDQaC6+Aaqsng1BbTcOqeEsKEi+X99N+ZhwiAn1hxz/uu5\niSSPs8TSdASc8SV9Au1cNNCH2R1sgo2eKyffDr2kvXcZtx/0EJzlZ3DhAoGBAMjD\n6GDTvC6tiNGVYzUmsMORladqWNDmlzkUxs616voxKXl0uv0SMJ1XqVm8dOsYu/lb\nvcXGUNBS3lAD07Hm54BVnIcycW9hZLIq539KAyPkOn3H1m3YIGzZdS4Afr45Rjgn\nOvmZqXkWNKFrQBWpYTTLJsWUDpRkTokYusxW6ixXAoGAHR6IL685uG8xOacSe5Vc\ncxeabuiYnfjz00BjdVC0P7KLooinFicwD+Wjh6Q8+6E5JLMbuE3LzZpMpCD1OY22\n+elljyi2zRGxqCTiuU/mXAvTuCjahj1PmLL6eViePSX778W/T6YxJaUnlYlD0M3p\n8OjQAr0HyZKcGAZ/w9Q+dzg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-1m11j@makom-delivery.iam.gserviceaccount.com",
+  "client_id": "101606241814071926690",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1m11j%40makom-delivery.iam.gserviceaccount.com"
+}
