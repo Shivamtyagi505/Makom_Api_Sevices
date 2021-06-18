@@ -79,6 +79,39 @@ exports.GetOrder = async function(req,res,next){
     }
 }
 
+exports.GetPlacedOrder = async function (req, res, next) {
+    var status = req.body.status
+    var ids = req.body.ids;
+    var allorders=[];
+    if(ids!=null){
+        database.readOrderByIds(ids).then((result)=>{
+            allorders = result
+        }).catch((e)=>{
+            console.log(e); 
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }else{
+        try{
+        await database.readAllPlacedOrders(status).then((val) => {
+           return res.status(200).json({
+                    message : 'Placed Order details',
+                    orders : val,
+            })
+                }).catch((e) => {
+                    return res.status(401).json({
+                        error: DBERROR
+                    });
+                });
+            } catch (e) {
+                console.log(e);
+                return res.status(401).json({
+                    error: "Bad Request"
+                });
+            }
+    }
+};
 //admin action to verify order and send to driver driver
 exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;

@@ -53,7 +53,7 @@ async function readAllSellers(){
         if (err) {
             throw "Database error";
         } else {
-            console.log("getting all drivers");
+            console.log("getting all Sellers");
             sellers =result.map((dbuser) => {return {
                 uuid:dbuser.uuid,
                 name:dbuser.name,
@@ -175,7 +175,8 @@ async function readAllDrivers(){
                 phone: val.phone,
                 address: val.address,
                 city:val.city ,
-                state:val.state
+                state:val.state,
+                isblocked:val.isblocked,
                 }
             });
 
@@ -224,6 +225,25 @@ async function readAllOrders(){
     return orders;
 }
 
+//all Placed orders details
+async function readAllPlacedOrders(status){
+    var orders;
+    var data = { 
+        status: 'Placed'
+    }
+    await Order.find(data,function(err,result){
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("getting all PLaced Orders");
+            orders =result; 
+        }
+
+    }).catch((e)=>{
+        log.dbLog('readUser:' + id, err);    
+    });
+    return orders;
+}
 /***Write Queries ***/
 //admin
 async function createAdmin(admin){
@@ -309,6 +329,7 @@ async function createDriver(driver){
 async function ChangeSellerStatus(seller){
     var db_user;
     await seller.save().then((user)=>{
+        console.log(seller)
         console.log("seller status changed successfully");
         db_user=user;
         return user;
@@ -322,7 +343,7 @@ async function ChangeSellerStatus(seller){
 }
 
 //admin restricted APIs for driver
-async function ChangDriverStatus(driver){
+async function ChangeDriverStatus(driver){
     var db_user;
     await driver.save().then((user)=>{
         console.log("Driver status changed successfully");
@@ -412,12 +433,13 @@ module.exports={
     readAdminByEmail,
     readAdminById,
     createAdmin,
+    readAllPlacedOrders,
     //driver modules
     readDriverByEmail,
     readDriverByIds,
     createDriver,
     readAllDrivers,
-    ChangDriverStatus,
+    ChangeDriverStatus,
     //order modules
     createOrder,
     readOrderByIds,

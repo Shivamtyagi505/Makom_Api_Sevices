@@ -15,16 +15,16 @@ const { TOKENEXPIRE } = require('../util/constants')
 //admin signin
 exports.Signin = async function (req, res, next) {
     var dbuser = null;
+    const email = req.body.email 
     try {
         //finding the admin in database from the email provided.
-        await database.readAdminByEmail(req.body.email).then((val) => {
+        await database.readAdminByEmail(email).then((val) => {
             dbuser = val;
         }).catch((e) => {
             return res.status(401).json({
                 error: DBERROR
             });
         });
-
         if (dbuser != null) {
             //if admin exists with the current email than comparing the hash with the password field.
             await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
@@ -38,7 +38,8 @@ exports.Signin = async function (req, res, next) {
                     dbuser.save().then((result)=>{
                         return res.status(200).json({
                             message: "Successfully logged in",
-                            details: authToken, 
+                            details: authToken,
+                            email : email,
                         });
                     });
                 } else {
@@ -99,13 +100,13 @@ exports.NewAdmin = function (req, res, next) {
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
     let id = req.query.id;
-        database.readSellerById(id).then((val)=>{
+        database.readSellerByIds(id).then((val)=>{
             var user_data=val;
             user_data.isblocked=req.body.isblocked;
-            
+           // console.log(user_data)
             database.ChangeSellerStatus(user_data).then((result)=>{ 
                 return res.status(200).json({
-                    result:"Status changed successfully"
+                    message:"Seller Status changed successfully"
             });
             }).catch((e)=>{
                 throw "Error while changing status";
@@ -121,13 +122,14 @@ exports.ChangeSellerStatus = async function(req,res,next){
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
     let id = req.query.id;
-        database.readDriverById(id).then((val)=>{
+        database.readDriverByIds(id).then((val)=>{
             var user_data=val;
             user_data.isblocked=req.body.isblocked;
-            
+           //  console.log(user_data)
             database.ChangeDriverStatus(user_data).then((result)=>{ 
                 return res.status(200).json({
-                    result:"Status changed successfully"
+                    user_data:user_data.isblocked,
+                    message:"Driver Status changed successfully",
             });
             }).catch((e)=>{
                 throw "Error while changing status";
