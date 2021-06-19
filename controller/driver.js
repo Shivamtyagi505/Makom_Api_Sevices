@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const Driver = require('../model/driverModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
+const mailservices = require('../controller/email')
 
 
 //driver  sign up only under admin control no independent signup
@@ -192,6 +193,7 @@ exports.OrderVerify = async function(req,res,next){
             }else if(action=="accepted"&&orderid){ 
                      var order = orders[0];   
                     order.status="assigned";
+
                     order.assignedto={
                         uuid:user.uuid,
                         name:user.name,
@@ -203,10 +205,19 @@ exports.OrderVerify = async function(req,res,next){
                     }).catch((err)=>{
                         throw "Error while approving the order"
                     }); 
-                    res.status(200).json({
-                        status:"Order has been successfully assigned",
-                        order:order 
-                    }); 
+                    var body = "Order has been successfully assigned to "+user.name+"\nphone numer : "+user.phone+"\n Email address :"+user.email;
+                    
+                    mailservices.SendMail(order.seller.email,"Order Update","Dear user your "+body).then((result)=>{ 
+                        res.status(200).json({
+                            status:"Order has been successfully assigned",
+                            order:order 
+                        }); 
+                    }).catch((e)=>{
+                        console.log(e);
+                        res.status(401).json({
+                            error:"Error with email services"
+                        });
+                    });  
             }else {
                 res.status(401).json({
                     status:"Missing order id or imporper action"

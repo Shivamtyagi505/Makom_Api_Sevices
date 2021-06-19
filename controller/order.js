@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const Order = require('../model/orderModal')
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
+const mailservices = require('../controller/email')
 
 
 
@@ -35,10 +36,18 @@ exports.CreateOrder = async function (req, res, next) {
                 if (val == null) {
                     throw Error("Error while creating order");
                 } else {
-                    res.status(201).json({
-                        message: "Order successfully created.",
-                        order:val
+                    mailservices.SendMail(req.user.email,"Order Placed","Dear user your order has been successfully placed our driver will contact you soon.").then((result)=>{ 
+                        res.status(201).json({
+                            message: "Order successfully created.",
+                            order:val
+                        }); 
+                    }).catch((e)=>{
+                        console.log(e);
+                        res.status(401).json({
+                            error:"Error with email services"
+                        });
                     });
+                   
                 }
             }).catch((err) => {
                 console.log(err);
@@ -46,6 +55,7 @@ exports.CreateOrder = async function (req, res, next) {
                     error: DBERROR
                 });
             });
+
         }
    
 //get order or particular order by id;
@@ -175,6 +185,8 @@ exports.VerifyOrder = async function(req,res,next){
  
     if(orderid&&action&&action=="approved"||action=="rejected"){
         database.readOrderByIds([orderid]).then((orders)=>{
+            if(orders.length==0)
+            throw "No order available";
           var  order =orders[0];
             if(action=="rejected"){
                 order.status="rejected";
@@ -191,6 +203,8 @@ exports.VerifyOrder = async function(req,res,next){
 
             }else if(action=="approved"&&driverid){
                 database.readDriverByIds([driverid]).then((drivers)=>{
+                    if(drivers.length==0)
+                    throw "No driver with this id  found";
                     let update_driver=drivers[0];
                     order.status="approved";
                     order.save().then((result)=>{
@@ -218,8 +232,10 @@ exports.VerifyOrder = async function(req,res,next){
                
             } 
         }).catch((e)=>{
-            console.log(e);
-            throw "No order found";
+            console.log(e); 
+             res.status(401).json({
+                error: "No order with the id is available"
+            });    
         });
     } else{
         return res.status(401).json({

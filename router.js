@@ -76,7 +76,11 @@ module.exports= function(app){
     apiRoutes.get('/admin/order/statistics',auth.requireAdminPermission,OrderController.GetOrderStatistics);
     apiRoutes.get('/admin/order/Placedetails',auth.requireAdminPermission,OrderController.GetPlacedOrder);
     //set url for API v1 group routes
-    app.use('/v1/api',apiRoutes);
 
+    app.use('/v1/api',apiRoutes);
+    app.use((req, res) => {
+        res.status(404).send("Invalid request");
+    });
+    
     
 }

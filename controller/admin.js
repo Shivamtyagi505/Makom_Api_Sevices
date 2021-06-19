@@ -11,6 +11,7 @@ const Driver = require('../model/driverModal');
 const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
+const mailservices = require('../controller/email')
 
 //admin signin
 exports.Signin = async function (req, res, next) {
@@ -97,7 +98,8 @@ exports.NewAdmin = function (req, res, next) {
 }
 
 
-
+var account_deactivated="account is no longer active it has been blocked by the admin you will no longer be able to use makom services.";
+var account_activated = "account is active now you will be able to use all makom services from now."
   
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
@@ -111,13 +113,21 @@ exports.ChangeSellerStatus = async function(req,res,next){
         }
         var user_data=val[0];
         user_data.isblocked=req.body.isblocked;
+        var body = user_data.isblocked?account_deactivated:account_activated;
          console.log(user_data)
         database.ChangeSellerStatus(user_data).then((result)=>{ 
-            return res.status(200).json({
-                isblocked:user_data.isblocked,
-                message:"seller Status changed successfully",
-        });
-       
+            mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
+                res.status(200).json({
+                    isblocked:user_data.isblocked,
+                    message:"seller Status changed successfully"
+                }); 
+            }).catch((e)=>{
+                console.log(e);
+                res.status(401).json({
+                    error:"Error with email services"
+                });
+            });      
+        
         }).catch((e)=>{
             throw "Error while changing status";
         });
@@ -141,13 +151,21 @@ exports.ChangeDriverStatus = async function(req,res,next){
             }
             var user_data=val[0];
             user_data.isblocked=req.body.isblocked;
-            console.log("This is driver data")
-             console.log(user_data)
+            user_data.isblocked=req.body.isblocked;
+            var body = user_data.isblocked?account_deactivated:account_activated;
+ 
             database.ChangeDriverStatus(user_data).then((result)=>{ 
-                return res.status(200).json({
-                    isblocked:user_data.isblocked,
-                    message:"Driver Status changed successfully",
-            });
+                mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
+                    res.status(200).json({
+                        isblocked:user_data.isblocked,
+                        message:"Driver Status changed successfully"
+                    }); 
+                }).catch((e)=>{
+                    console.log(e);
+                    res.status(401).json({
+                        error:"Error with email services"
+                    });
+                });      
            
             }).catch((e)=>{
                 throw "Error while changing status";
