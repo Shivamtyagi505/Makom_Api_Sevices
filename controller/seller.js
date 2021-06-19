@@ -122,7 +122,7 @@ exports.GetSeller = async function(req,res,next){
     var ids = req.body.ids;
     var allsellers=[];
     if(ids!=null){
-        database.readSellerByIds(ids).then((result)=>{
+        database.readUserByIds(ids,"seller").then((result)=>{
             allsellers = result.map(dbuser=>{
                 return {
                         uuid:dbuser.uuid,

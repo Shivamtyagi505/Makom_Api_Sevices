@@ -104,7 +104,7 @@ var account_activated = "account is active now you will be able to use all makom
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
     let id = req.body.id;
-    database.readSellerByIds([id]).then((val)=>{
+    database.readUserByIds([id],"seller").then((val)=>{
          
         if(val==null||val[0]==null){
             return res.status(401).json({ 
@@ -142,8 +142,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
     let id = req.body.id;
-        database.readDriverByIds([id]).then((val)=>{
-             
+        database.readUserByIds([id],"driver").then((val)=>{
             if(val==null||val[0]==null){
                 return res.status(401).json({ 
                     message:"Invalid driver id",

@@ -115,7 +115,7 @@ exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;
     var alldrivers=[];
     if(ids!=null){
-        database.readDriverByIds(ids).then((result)=>{
+        database.readUserByIds(ids,"driver").then((result)=>{
             alldrivers = result.map(val=>{
                 return {
                     uuid:val.uuid,

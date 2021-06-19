@@ -2,8 +2,11 @@ const jwt = require('jsonwebtoken');
 const database = require('../services/mongodb');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
+const request_type = require('../util/request_type')
 
-exports.requireCommonAuth = async function(req,res,next){
+exports.AuthManager = function (req, res, next) {
+
+    var type = request_type.GetRequestType(req.url);
     const authHeader = req.headers['authorization'];
     if (authHeader == null) return res.status(401).json({
         error: 'Forbidded',
@@ -13,142 +16,32 @@ exports.requireCommonAuth = async function(req,res,next){
     if (token == null) return res.status(401).json({
         error: 'Forbidded',
         message: 'Token Not Found'
-    }); 
-    jwt.verify(token, AUTHSECRET, async (err, result) => {
-        if (err) {
-            jwt.verify(token, ADMINSECRET, async (err, result) => {
-                if (err) {
-                    return res.status(401).json({
-                        error: "Unauthorized",
-                        message: err.message,
-                    });
-                } 
+    });
+    var SECRET = type == "admin" ? ADMINSECRET : AUTHSECRET;
+    jwt.verify(token, SECRET, async (err, result) => {
+        if (err) return res.status(401).json({
+            error: "Unauthorized",
+            message: err.message,
+        });
+
+        //fetching the user from database for further use 
+        await database.readUserByIds(result.id, type).then((userdata) => {
+            req.user = userdata[0];
+            console.log("Requesting Data for " + req.user.email + " Type " + type);
+            next();
+        }).catch((err) => {
+            console.log(err);
+            res.status(401).json({
+                error: "Issue while reading the user from database"
             });
-
-        }
-   });
-   next();
-}   
-
-//seller
-exports.requireSellerAuth = async function (req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    });
-    const token = authHeader.split(' ')[1];
-    if (token == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    }); 
-     jwt.verify(token, AUTHSECRET,async (err, result) => {
-         if (err) return res.status(401).json({
-            error: "Unauthorized",
-            message: err.message,
-        }); 
-
-      await database.readSellerByIds(result.id).then((userdata)=>{
-                req.user=userdata[0]; 
-                next();
-         }).catch((err)=>{
-            console.log(err);
-            res.status(500).json({
-                error:"Internal server error"
-            });    
-         });   
-
-    }).catch((err)=>{
+        });
+    }).catch((err) => {
         console.log(err);
-        res.status(500).json({
-            error:"Internal server error"
-        });    
+        res.status(401).json({
+            error: "Token signature does not match"
+        });
     });
-}
-//seller
-exports.requireDriverAuth = async function (req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    });
-    const token = authHeader.split(' ')[1];
-    if (token == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    }); 
-    await jwt.verify(token, AUTHSECRET, (err, result) => {
-        if (err) return res.status(401).json({
-            error: "Unauthorized",
-            message: err.message,
-        }); 
-         database.readDriverByIds(result.id).then((userdata)=>{
-                req.user=userdata[0];
-                next();
-         }).catch((err)=>{
-            console.log(err);
-            res.status(500).json({
-                error:"Internal server error"
-            });    
-         });   
 
-    });
-}
-//seller
-exports.requireAdminAuth = async function (req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    });
-    const token = authHeader.split(' ')[1];
-    if (token == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    }); 
-    await jwt.verify(token, ADMINSECRET, (err, result) => {
-        if (err) return res.status(401).json({
-            error: "Unauthorized",
-            message: err.message,
-        }); 
-         database.readAdminById(result.id).then((userdata)=>{
-                req.user=userdata; 
-                next();
-         }).catch((err)=>{
-            console.log(err);
-            res.status(500).json({
-                error:"Internal server error"
-            });    
-         });   
 
-    });
 }
 
-//Admin accessible services
-exports.requireAdminPermission = async function (req, res, next) {
-    const authHeader = req.headers['authorization'];
-    if (authHeader == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    });
-    const token = authHeader.split(' ')[1];
-    if (token == null) return res.status(401).json({
-        error: 'Forbidded',
-        message: 'Token Not Found'
-    }); 
-    await jwt.verify(token, ADMINSECRET, (err, result) => {
-        if (err) return res.status(401).json({
-            error: "Unauthorized",
-            message: err.message,
-        }); 
-         database.readAdminById(result.id).then((userdata)=>{
-                next();
-         }).catch((err)=>{
-            console.log(err);
-            res.status(500).json({
-                error:"Internal server error"
-            });    
-         });   
-
-    });
-}

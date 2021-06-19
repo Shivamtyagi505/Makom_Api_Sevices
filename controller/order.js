@@ -202,7 +202,7 @@ exports.VerifyOrder = async function(req,res,next){
                 //update the order status to approved and assign it to the driver
 
             }else if(action=="approved"&&driverid){
-                database.readDriverByIds([driverid]).then((drivers)=>{
+                database.readUserByIds([driverid],"driver").then((drivers)=>{
                     if(drivers.length==0)
                     throw "No driver with this id  found";
                     let update_driver=drivers[0];

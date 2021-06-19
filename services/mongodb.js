@@ -12,6 +12,39 @@ const log = require('../util/logger')
 
 
 /***Read Queries***/
+
+async function readUserByIds(ids,type){
+    console.log("Fetching query of "+type);
+    var user=[]; 
+    var data ={
+        uuid:ids
+    };
+    var queryModel;
+
+    if(type=="admin")
+        queryModel=Admin
+    else if(type=="seller")
+        queryModel = Seller
+    else if (type=="driver")
+        queryModel = Driver
+    else 
+        return null;     
+
+    await queryModel.find(data,function(err,result){     
+        if (err) {
+            throw "Database error";
+        } else {
+            console.log("Got the result")
+             user=result;
+        }
+        }).catch((e)=>{
+          console.log(e);
+          return null;          
+        });   
+    return user;
+}
+
+
 async function readSellerByEmail(email){ 
     var user=null;
     var data ={
@@ -29,23 +62,7 @@ async function readSellerByEmail(email){
     return user;
 }
  
-async function readSellerByIds(ids){ 
-    var user=[]; 
-    var data ={
-        uuid:ids
-    };
-    await Seller.find(data,function(err,result){     
-        if (err) {
-            throw "Database error";
-        } else {
-             user=result;
-        }
-        }).catch((e)=>{
-          console.log(e);
-          return null;          
-        });   
-    return user;
-}
+ 
 //all sellers
 async function readAllSellers(){
     var sellers;
@@ -100,26 +117,7 @@ async function readAdminByEmail(email){
  
 }
 
-//read admin by id
-async function readAdminById(uuid){ 
-    var user=null;
-    console.log(uuid);
-    var data ={
-        uuid:uuid
-    };
-    try{
-       await Admin.findOne(data,function(err,result){
-         console.log(result);  
-        if(!err){
-            user=result; 
-        } 
-        });
-
-    }catch(err){
-        log.dbLog('readUser:' + id, err);
-    } 
-    return user;
-}
+ 
 
 //driver by email
 async function readDriverByEmail(email){ 
@@ -141,24 +139,7 @@ async function readDriverByEmail(email){
     return user;
 }
 
-//read driver by id
-async function readDriverByIds(ids){ 
-    var user=[]; 
-    var data ={
-        uuid:ids
-    };
-    await Driver.find(data,function(err,result){     
-        if (err) {
-            throw "Database error";
-        } else { 
-             user=result;
-        }
-        }).catch((e)=>{
-          console.log("mongodb.js"+e);
-          return null;          
-        });   
-    return user;
-}
+ 
 //all drivers
 async function readAllDrivers(){
     var drivers;
@@ -422,21 +403,19 @@ async function getAllProducts(ids){
 }
 
 module.exports={
+    readUserByIds,
     //seller modules
     createSeller,
     readSellerByEmail,
-    readSellerByIds,
     readAllSellers,
     UpdateSeller,
     ChangeSellerStatus, 
     //admin modules 
-    readAdminByEmail,
-    readAdminById,
+    readAdminByEmail, 
     createAdmin,
     readAllPlacedOrders,
     //driver modules
     readDriverByEmail,
-    readDriverByIds,
     createDriver,
     readAllDrivers,
     ChangeDriverStatus,
