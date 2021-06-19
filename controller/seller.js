@@ -58,10 +58,10 @@ exports.Signup = function (req, res, next) {
 
 exports.Signin = async function (req, res, next) {
     var dbuser = null;
-    console.log(req.body.email);
+    const email = req.body.email
     try {
         //finding the seller in database from the email provided.
-        await database.readSellerByEmail(req.body.email).then((val) => {
+        await database.readUserByEmail(email,"seller").then((val) => {
             dbuser = val;
         }).catch((e) => {
             console.log("Error while getting user from email");

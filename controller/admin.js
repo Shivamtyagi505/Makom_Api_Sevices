@@ -19,7 +19,7 @@ exports.Signin = async function (req, res, next) {
     const email = req.body.email 
     try {
         //finding the admin in database from the email provided.
-        await database.readAdminByEmail(email).then((val) => {
+        await database.readUserByEmail(email,"admin").then((val) => {
             dbuser = val;
         }).catch((e) => {
             return res.status(401).json({
