@@ -14,11 +14,17 @@ const log = require('../util/logger')
 /***Read Queries***/
 
 async function readUserByIds(ids,type){
+
     console.log("Fetching query of "+type);
     var user=[]; 
-    var data ={
-        uuid:ids
-    };
+    var data;
+    if(ids){
+        data ={
+            uuid:ids
+        }; 
+    }else{
+        data={}
+    }
     var queryModel;
 
     if(type=="admin")
@@ -33,8 +39,7 @@ async function readUserByIds(ids,type){
     await queryModel.find(data,function(err,result){     
         if (err) {
             throw "Database error";
-        } else {
-            console.log("Got the result")
+        } else { 
              user=result;
         }
         }).catch((e)=>{
@@ -62,40 +67,7 @@ async function readSellerByEmail(email){
     return user;
 }
  
- 
-//all sellers
-async function readAllSellers(){
-    var sellers;
-    await Seller.find({},function(err,result){
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log("getting all Sellers");
-            sellers =result.map((dbuser) => {return {
-                uuid:dbuser.uuid,
-                name:dbuser.name,
-                email:dbuser.email,
-                phone:dbuser.phone,
-                address:dbuser.address,
-                category:dbuser.category,
-                city:dbuser.city,
-                state:dbuser.state,
-                order:dbuser.orders,
-                products:dbuser.products,
-                isblocked:dbuser.isblocked,
-                isverified:dbuser.isverified,
-                activity : dbuser.activity,
-            }});; 
-        }
 
-    }).catch((e)=>{
-        log.dbLog('readUser:' + id, err);    
-    });
-    return sellers;
-}
-
-
-//admin
 //admin by email
 async function readAdminByEmail(email){ 
     var user=null;
@@ -138,93 +110,42 @@ async function readDriverByEmail(email){
         });  
     return user;
 }
-
  
-//all drivers
-async function readAllDrivers(){
-    var drivers;
-    await Driver.find({},function(err,result){
+async function readObjectsByIds(ids,type){ 
+    var objects=[]; 
+    var QueryModel;
+    var data={};
+    if(type=="order"){
+        QueryModel=Order;
+        if(ids!=null){
+            data={
+                orderid:ids
+            }
+        } 
+    }
+    else if (type=="product"){
+        QueryModel = Product;
+        var data ={
+            product_id:ids
+        };
+    }else{
+        return null;
+    }
+    
+    await QueryModel.find(data,function(err,result){     
         if (err) {
             throw "Database error";
         } else {
-            console.log("getting all drivers");
-            drivers =result.map((val) => {
-                return {
-                uuid: val.uuid,
-                name: val.name,
-                email: val.email,
-                phone: val.phone,
-                address: val.address,
-                city:val.city ,
-                state:val.state,
-                isblocked:val.isblocked,
-                }
-            });
-
-        }
-
-    }).catch((e)=>{
-        log.dbLog('readUser:' + id, err);    
-    });
-    return drivers;
-}
-
-//read order by ids
-async function readOrderByIds(ids){ 
-    var orders=[]; 
-    var data ={
-        orderid:ids
-    };
-    await Order.find(data,function(err,result){     
-        if (err) {
-            throw "Database error";
-        } else {
-             orders=result;
+             objects=result;
         }
         }).catch((e)=>{
           console.log(e);
           return null;          
         });   
-    return orders;
+    return objects;
 }
 
  
-//all orders
-async function readAllOrders(){
-    var orders;
-    await Order.find({},function(err,result){
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log("getting all drivers");
-            orders =result; 
-        }
-
-    }).catch((e)=>{
-        log.dbLog('readUser:' + id, err);    
-    });
-    return orders;
-}
-
-//all Placed orders details
-async function readAllPlacedOrders(status){
-    var orders;
-    var data = { 
-        status: 'Placed'
-    }
-    await Order.find(data,function(err,result){
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log("getting all PLaced Orders");
-            orders =result; 
-        }
-
-    }).catch((e)=>{
-        log.dbLog('readUser:' + id, err);    
-    });
-    return orders;
-}
 /***Write Queries ***/
 //admin
 async function createAdmin(admin){
@@ -383,47 +304,25 @@ async function createProduct(product,user){
     }); 
     return product_details;
 }
-async function getAllProducts(ids){
-    var products=[];
-    await Product.find({
-        'product_id' :  ids
-    },function(err,result){
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log("getting all products");
-             products=result; 
-        }
-
-    }).catch((e)=>{
-        log.dbLog('readUser:' + id, err);    
-    });
-    return products;
-
-}
+ 
 
 module.exports={
     readUserByIds,
     //seller modules
     createSeller,
-    readSellerByEmail,
-    readAllSellers,
+    readSellerByEmail, 
     UpdateSeller,
     ChangeSellerStatus, 
     //admin modules 
     readAdminByEmail, 
     createAdmin,
-    readAllPlacedOrders,
     //driver modules
     readDriverByEmail,
-    createDriver,
-    readAllDrivers,
+    createDriver, 
     ChangeDriverStatus,
+    readObjectsByIds,
     //order modules
-    createOrder,
-    readOrderByIds,
-    readAllOrders,
+    createOrder, 
     //product 
-    createProduct,
-    getAllProducts
+    createProduct, 
 }

@@ -63,8 +63,7 @@ exports.CreateOrder = async function (req, res, next) {
 exports.GetOrder = async function(req,res,next){
     var ids = req.body.ids;
     var allorders=[];
-    if(ids!=null){
-        database.readOrderByIds(ids).then((result)=>{
+        database.readObjectsByIds(ids,"order").then((result)=>{
             allorders = result;
             return res.status(200).json({
                 orders: allorders
@@ -75,21 +74,10 @@ exports.GetOrder = async function(req,res,next){
                 error: "Bad Request"
             });
         });
-    }else{
-        database.readAllOrders().then((val)=>{
-            return res.status(200).json({
-                orders: val
-            });
-        }).catch((e)=>{
-            console.log(e);
-            return res.status(401).json({
-                error: "Bad Request"
-            });
-        });
-    }
+     
 }
 exports.GetOrderStatistics = async function(req,res,next){
-    database.readAllOrders().then((val)=>{
+    database.readObjectsByIds(null,"order").then((val)=>{
         var total= val.length;
         var completed=[];
         var placed=[];
@@ -142,40 +130,6 @@ exports.GetOrderStatistics = async function(req,res,next){
     });
 }
 
-
-exports.GetPlacedOrder = async function (req, res, next) {
-    var status = req.body.status
-    var ids = req.body.ids;
-    var allorders=[];
-    if(ids!=null){
-        database.readOrderByIds(ids).then((result)=>{
-            allorders = result
-        }).catch((e)=>{
-            console.log(e); 
-            return res.status(401).json({
-                error: "Bad Request"
-            });
-        });
-    }else{
-        try{
-        await database.readAllPlacedOrders(status).then((val) => {
-           return res.status(200).json({
-                    message : 'Placed Order details',
-                    orders : val,
-            })
-                }).catch((e) => {
-                    return res.status(401).json({
-                        error: DBERROR
-                    });
-                });
-            } catch (e) {
-                console.log(e);
-                return res.status(401).json({
-                    error: "Bad Request"
-                });
-            }
-    }
-};
 //admin action to verify order and send to driver driver
 exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;
@@ -184,7 +138,7 @@ exports.VerifyOrder = async function(req,res,next){
  
  
     if(orderid&&action&&action=="approved"||action=="rejected"){
-        database.readOrderByIds([orderid]).then((orders)=>{
+        database.readObjectsByIds([orderid],"order").then((orders)=>{
             if(orders.length==0)
             throw "No order available";
           var  order =orders[0];

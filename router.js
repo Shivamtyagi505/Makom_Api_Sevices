@@ -69,7 +69,6 @@ module.exports= function(app){
     //fetch order all or by id list
     apiRoutes.get('/admin/order/details',auth.AuthManager,OrderController.GetOrder);
     apiRoutes.get('/admin/order/statistics',auth.AuthManager,OrderController.GetOrderStatistics);
-    apiRoutes.get('/admin/order/Placedetails',auth.AuthManager,OrderController.GetPlacedOrder);
     //set url for API v1 group routes
 
     app.use('/v1/api',apiRoutes);

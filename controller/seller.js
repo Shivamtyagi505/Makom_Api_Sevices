@@ -121,7 +121,6 @@ exports.Signin = async function (req, res, next) {
 exports.GetSeller = async function(req,res,next){
     var ids = req.body.ids;
     var allsellers=[];
-    if(ids!=null){
         database.readUserByIds(ids,"seller").then((result)=>{
             allsellers = result.map(dbuser=>{
                 return {
@@ -148,18 +147,7 @@ exports.GetSeller = async function(req,res,next){
                 error: "Bad Request"
             });
         });
-    }else{
-        database.readAllSellers().then((val)=>{
-            return res.status(200).json({
-                sellers: val
-            });
-        }).catch((e)=>{
-            console.log(e);
-            return res.status(401).json({
-                error: "Bad Request"
-            });
-        });
-    }
+     
 }
 
 

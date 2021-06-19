@@ -26,13 +26,16 @@ exports.AuthManager = function (req, res, next) {
 
         //fetching the user from database for further use 
         await database.readUserByIds(result.id, type).then((userdata) => {
+            if(!userdata||userdata.length==0){ 
+                throw "Read Error";
+            }   
             req.user = userdata[0];
             console.log("Requesting Data for " + req.user.email + " Type " + type);
             next();
         }).catch((err) => {
             console.log(err);
             res.status(401).json({
-                error: "Issue while reading the user from database"
+                error: "Issue while reading the user from database or inappropriate token passed"
             });
         });
     }).catch((err) => {

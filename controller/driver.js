@@ -114,7 +114,6 @@ exports.Signin = async function (req, res, next) {
 exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;
     var alldrivers=[];
-    if(ids!=null){
         database.readUserByIds(ids,"driver").then((result)=>{
             alldrivers = result.map(val=>{
                 return {
@@ -135,19 +134,7 @@ exports.GetDriver = async function(req,res,next){
             return res.status(401).json({
                 error: "Bad Request"
             });
-        });
-    }else{
-        database.readAllDrivers().then((val)=>{
-            return res.status(200).json({
-                drivers: val
-            });
-        }).catch((e)=>{
-            console.log(e);
-            return res.status(401).json({
-                error: "Bad Request"
-            });
-        });
-    }
+        }); 
 }
 
 
