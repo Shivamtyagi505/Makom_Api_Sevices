@@ -17,8 +17,7 @@ module.exports= function(app){
     const apiRoutes = express.Router();
 
     //test APIs 
-    apiRoutes.get('/test/hello',testController.getRequest);
-    apiRoutes.post('/test/hello',testController.postRequest);
+    apiRoutes.get('/test/hello',testController.getRequest); 
 
     //********************seller APIs**************************    
     //once signup a request will be send to admin to verify account
@@ -29,8 +28,6 @@ module.exports= function(app){
     apiRoutes.get('/seller/profile',auth.requireSellerAuth,sellerAuthController.GetProfile);
     //update profile
     apiRoutes.post('/seller/profile',auth.requireSellerAuth,sellerAuthController.UpdateProfile);
-    
-    
     //create a new order
 
     apiRoutes.post('/seller/order/create',auth.requireSellerAuth,OrderController.CreateOrder);
@@ -64,7 +61,6 @@ module.exports= function(app){
     apiRoutes.post('/admin/order/verify',auth.requireAdminPermission,OrderController.VerifyOrder);
 
 
-    
     //fetch driver all or by id list
     apiRoutes.get('/admin/driver/details',auth.requireAdminPermission,driverAuthController.GetDriver);
     //similar to driver pass a list of ids or no ids to receive ids of all sellers
