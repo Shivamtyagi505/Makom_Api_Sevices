@@ -4,6 +4,7 @@ const server = require('http').Server(app);
 const mongoose = require('mongoose');
 const {PORT,DATABASE} = require('./config/main');
 const logger = require('morgan');
+var cors = require('cors')
 
 const router = require('./router');
 
@@ -19,7 +20,7 @@ mongoose.connection.on('error',console.error.bind(console,'connection error'))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
-
+app.use(cors())
 //Enable CORS from client-side
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
