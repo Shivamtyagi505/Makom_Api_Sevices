@@ -74,7 +74,7 @@ exports.NewAdmin = function (req, res, next) {
                 name:req.body.name, 
                 password:hash,
             }); 
-            database.createAdmin(admin).then((val) => {
+            database.saveUser(admin).then((val) => {
                 if (val == null) {
                     throw Error("Error while setting account");
                 } else {
@@ -115,7 +115,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
         user_data.isblocked=req.body.isblocked;
         var body = user_data.isblocked?account_deactivated:account_activated;
          console.log(user_data)
-        database.ChangeSellerStatus(user_data).then((result)=>{ 
+        database.saveUser(user_data).then((result)=>{ 
             mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
                 res.status(200).json({
                     isblocked:user_data.isblocked,
@@ -153,7 +153,7 @@ exports.ChangeDriverStatus = async function(req,res,next){
             user_data.isblocked=req.body.isblocked;
             var body = user_data.isblocked?account_deactivated:account_activated;
  
-            database.ChangeDriverStatus(user_data).then((result)=>{ 
+            database.saveUser(user_data).then((result)=>{ 
                 mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
                     res.status(200).json({
                         isblocked:user_data.isblocked,
@@ -176,8 +176,3 @@ exports.ChangeDriverStatus = async function(req,res,next){
             });
         });  
 }
-
-
- 
-
-

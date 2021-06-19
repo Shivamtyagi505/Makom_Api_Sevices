@@ -33,7 +33,7 @@ exports.Signup = function (req, res, next) {
                 isverified:false,
                 isblocked:false,
             }); 
-            database.createSeller(seller).then((val) => {
+            database.saveUser(seller).then((val) => {
                 if (val == null) {
                     throw Error("Error while setting account");
                 } else {
@@ -173,8 +173,23 @@ exports.GetProfile = async function(req,res,next){
 exports.UpdateProfile = async function(req,res,next){
     var user = req.user;
     const { name, phone, address, city,state} = req.body;
- 
-    database.UpdateSeller(user,name,phone,address,city,state).then(user => {
+    if(name){
+        user.name=name;
+    } 
+    if(phone){
+        user.phone=phone;
+    }
+    if(address){
+        user.address=address;
+    }
+    if(city){
+        user.city=city;
+    }
+    if(state){
+        user.state=state;
+    }
+    
+    database.saveUser(user).then(user => {
         if (user) {
             var user_data={
                 uuid:user.uuid,

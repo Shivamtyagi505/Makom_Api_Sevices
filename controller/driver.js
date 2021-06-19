@@ -30,7 +30,7 @@ exports.Signup = function (req, res, next) {
                 state: req.body.state,
                 isblocked:false, 
             }); 
-            database.createDriver(driver).then((val) => {
+            database.saveUser(driver).then((val) => {
                 if (val == null) {
                     throw Error("Error while setting account");
                 } else {

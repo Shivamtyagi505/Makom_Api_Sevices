@@ -47,7 +47,6 @@ module.exports= function(app){
     apiRoutes.post('/admin/newadmin',auth.AuthManager,adminAuthController.NewAdmin);
     apiRoutes.post('/admin/newdriver',auth.AuthManager,driverAuthController.Signup);
 
-
     
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
