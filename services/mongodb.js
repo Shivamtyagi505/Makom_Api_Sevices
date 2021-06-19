@@ -41,6 +41,7 @@ async function readUserByIds(ids,type){
             throw "Database error";
         } else { 
              user=result;
+             
         }
         }).catch((e)=>{
           console.log(e);
@@ -49,68 +50,38 @@ async function readUserByIds(ids,type){
     return user;
 }
 
-
-async function readSellerByEmail(email){ 
-    var user=null;
+async function readUserByEmail(email,type){
+    console.log("Fetching query of "+type);
+    var user=null; 
     var data ={
         email:email
     };
-    try{
-       await Seller.findOne(data,function(err,result){
-        if(!err){
-            user=result;
-        } 
-        });
-    }catch(err){
-        log.dbLog('readUser:' + email, err);
-    } 
-    return user;
-}
- 
+    var queryModel;
 
-//admin by email
-async function readAdminByEmail(email){ 
-    var user=null;
-    var data ={
-        email:email
-    };
-    await Admin.findOne(data,function(err,result){     
+    if(type=="admin")
+        queryModel=Admin
+    else if(type=="seller")
+        queryModel = Seller
+    else if (type=="driver")
+        queryModel = Driver
+    else 
+        return null;     
+
+    await queryModel.findOne(data,function(err,result){     
         if (err) {
             throw "Database error";
         } else {
-            console.log(result);  
-            user=result; 
+            console.log("Got the result")
+             user=result;
+             console.log(user)
         }
         }).catch((e)=>{
           console.log(e);
           return null;          
-        }); 
+        });   
     return user;
- 
-}
+}   
 
- 
-
-//driver by email
-async function readDriverByEmail(email){ 
-    var user=null;
-    var data ={
-        email:email
-    };
-    await Driver.findOne(data,function(err,result){     
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log(result);  
-            user=result; 
-        }
-        }).catch((e)=>{
-          console.log(e);
-          return null;          
-        });  
-    return user;
-}
- 
 async function readObjectsByIds(ids,type){ 
     var objects=[]; 
     var QueryModel;
@@ -308,18 +279,16 @@ async function createProduct(product,user){
 
 module.exports={
     readUserByIds,
+    readUserByEmail,
     //seller modules
     createSeller,
-    readSellerByEmail, 
-    UpdateSeller,
+     UpdateSeller,
     ChangeSellerStatus, 
     //admin modules 
-    readAdminByEmail, 
     createAdmin,
     //driver modules
-    readDriverByEmail,
-    createDriver, 
-    ChangeDriverStatus,
+     createDriver, 
+     ChangeDriverStatus,
     readObjectsByIds,
     //order modules
     createOrder, 

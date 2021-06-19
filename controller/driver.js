@@ -55,9 +55,10 @@ exports.Signup = function (req, res, next) {
 
 exports.Signin = async function (req, res, next) {
     var dbuser = null;
+    var email = req.body.email
     try {
         //finding the driver in database from the email provided.
-        await database.readDriverByEmail(req.body.email).then((val) => {
+        await database.readUserByEmail(email,"driver").then((val) => {
             dbuser = val;
         }).catch((e) => {
             return res.status(401).json({
@@ -82,7 +83,6 @@ exports.Signin = async function (req, res, next) {
                         state:dbuser.state??"",
                         order:dbuser.order,
                         isblocked:dbuser.isblocked,
- 
                      }
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
