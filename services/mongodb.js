@@ -117,7 +117,7 @@ async function readObjectsByIds(ids, type) {
 }
 
 
-/*****************************Create Queries*************************************************/
+/*****************************Write Queries*************************************************/
 
 async function saveUser(user) {
     var db_user;
@@ -183,7 +183,7 @@ module.exports = {
     readUserByIds,
     readUserByEmail,
     readObjectsByIds,
-    //create query
+    //write query
     saveUser,
     createOrder,
     createProduct, 
