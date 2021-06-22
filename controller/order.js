@@ -31,7 +31,7 @@ exports.CreateOrder = async function (req, res, next) {
                 status: "Placed",  
                 pickofflocation:req.body.pickofflocation,
                 destinationlocation:req.body.destinationlocation,
-                currentlocation:{}
+    
             });  
            await database.createOrder(OrderPlace,req.user).then((val) => {
                 if (val == null) {
