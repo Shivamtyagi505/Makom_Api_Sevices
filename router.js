@@ -30,10 +30,12 @@ module.exports= function(app){
     //create a new order
 
     apiRoutes.post('/seller/order/create',auth.AuthManager,OrderController.CreateOrder);
+    apiRoutes.get('/seller/order/statistics',auth.AuthManager,OrderController.GetSellerOrderStatistics);
     apiRoutes.post('/seller/myorders',auth.AuthManager,sellerAuthController.GetMyOrders,OrderController.GetOrder);
 
     apiRoutes.post('/seller/product/create',auth.AuthManager,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.AuthManager,ProductController.GetProducts);
+    apiRoutes.delete('/seller/product/delete',auth.AuthManager,ProductController.DeleteProducts);
     
 
      //******************************************driver APIs********************************

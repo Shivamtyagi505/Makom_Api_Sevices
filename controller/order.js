@@ -148,6 +148,77 @@ exports.GetOrderStatistics = async function(req,res,next){
     });
 }
 
+exports.GetSellerOrderStatistics = async function(req,res,next){
+    await database.readUserByIds(req.user.products,"seller").then((val)=>{
+          var total= val.length;
+          var completed=[];
+          var placed=[];
+          var approved=[];
+          var assigned=[];
+          var shipping=[];
+          var arrived=[];
+          var rejected=[];
+          for (let i=0;i<total;i++){
+              var order =val[i]; 
+              if(order.status=="Completed"){
+                  completed.push(order);
+              }else if(order.status=="Placed"){
+                  placed.push(order);
+              }else if(order.status=="approved"){
+                  approved.push(order);
+              }else if(order.status=="assigned"){
+                  assigned.push(order);
+              }
+              else if(order.status=="rejected"){
+                  rejected.push(order);
+              }
+              else if(order.status=="arrived"){
+                  arrived.push(order);
+              }
+              
+              else if(order.status=="shipping"){
+                  shipping.push(order);
+              }
+          }
+          return res.status(200).json({
+              total_orders:total,
+              placed_orders:{
+                  counts:placed.length,
+                  orders:placed
+              },
+              completed_orders:{
+                  counts:completed.length,
+                  orders:completed
+              },
+              approved_by_admin:{
+                  counts:approved.length,
+                  orders:approved,
+              },
+              rejected_by_admin:{
+                  counts:rejected.length,
+                  orders:rejected
+              },
+              assigned_to_driver:{
+                  counts:assigned.length,
+                  orders:assigned
+              },
+              shipping:{
+                  counts:shipping.length,
+                  orders:shipping
+              },
+              arrived:{
+                  counts:arrived.length,
+                  orders:arrived,
+              } 
+          });
+      }).catch((e)=>{
+          console.log(e);
+          return res.status(401).json({
+              error: "Bad Request"
+          });
+      });
+  }
+
 //admin action to verify order and send to driver driver
 exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;

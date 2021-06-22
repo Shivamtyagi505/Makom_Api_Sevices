@@ -7,6 +7,7 @@ const database = require('../services/mongodb');
 const { IDSIZE, DBERROR } = require('../util/constants');
 const jwt = require('jsonwebtoken');
 const Product = require('../model/productModal')
+const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 
@@ -59,4 +60,25 @@ exports.CreateProduct = async function (req, res, next) {
             });
         }
 
+        exports.DeleteProducts = async function(req,res,next){
+            let ids = req.user.products;
+            Seller.findByIdAndRemove(ids)
+            .then(data => {
+                if(!data) {
+                    return res.status(404).send({
+                        message: "Note not found with id " + ids
+                    });
+                }
+                res.send({message: "Note deleted successfully!"});
+            }).catch(err => {
+                if(err.kind === 'ObjectId' || err.name === 'NotFound') {
+                    return res.status(404).send({
+                        message: "Note not found with id " + ids
+                    });                
+                }
+                return res.status(500).send({
+                    message: "Could not delete note with id " + ids
+                });
+            });
+        };
         
