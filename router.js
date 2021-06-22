@@ -39,8 +39,9 @@ module.exports= function(app){
      //******************************************driver APIs********************************
     apiRoutes.post('/driver/signin',driverAuthController.Signin);
     apiRoutes.get('/driver/profile',auth.AuthManager,driverAuthController.GetProfile);
+    apiRoutes.get('/driver/order/myorders',auth.AuthManager,driverAuthController.GetOrders);
     apiRoutes.post('/driver/order/verify',auth.AuthManager,driverAuthController.OrderVerify);
-
+    apiRoutes.post('/driver/order/status',auth.AuthManager,driverAuthController.UpdateStatus);
     
     //***********************************admin APIs *****************************************
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
@@ -52,7 +53,7 @@ module.exports= function(app){
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
     apiRoutes.post('/admin/driver/changestatus',auth.AuthManager,adminAuthController.ChangeDriverStatus);
-    apiRoutes.get('/admin/driver/search',auth.AuthManager,adminAuthController.SearchDriver);
+  //  apiRoutes.get('/admin/driver/search',auth.AuthManager,adminAuthController.SearchDriver);
     //admin order previledge 
     // if id as a query parameter is passed then info regarding single order will be provided either response will be whole list of orders.
     

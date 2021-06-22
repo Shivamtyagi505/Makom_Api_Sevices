@@ -156,8 +156,43 @@ exports.GetProfile = async function(req,res,next){
        user:user_data
     });
 }
-
-
+exports.GetOrders = async function(req,res,next){
+    var ids = req.user.orders;
+    database.readObjectsByIds(ids,"order").then((result)=>{
+        return res.status(200).json({
+            orders: result
+        });
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+}
+exports.UpdateStatus = async function(req,res,next){
+    var id = req.body.id;
+    var status = req.body.status;
+    database.readObjectsByIds([id],"order").then((result)=>{
+        let order=  result[0];
+        order.status = status;
+        order.save().then((resp)=>{ 
+        return res.status(200).json({
+            message:"Status updated",
+            order:resp
+        });
+        }).catch((err)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Request Failed"
+            });    
+        })
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+}
 //driver accept or decline the order
 
 exports.OrderVerify = async function(req,res,next){

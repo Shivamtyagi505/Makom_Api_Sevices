@@ -8,7 +8,8 @@ const Order = require('../model/orderModal');
 const Product = require('../model/productModal');
 
 //UTILS
-const log = require('../util/logger')
+const log = require('../util/logger');
+const { json } = require('express');
 
 
 /*****************************Read Queries*************************************************/
@@ -17,14 +18,12 @@ async function readUserByIds(ids, type) {
 
     console.log("Fetching query of " + type);
     var user = [];
-    var data;
+    var data={};
     if (ids) {
         data = {
             uuid: ids
         };
-    } else {
-        data = {}
-    }
+    }  
     var queryModel;
 
     if (type == "admin")
@@ -35,7 +34,7 @@ async function readUserByIds(ids, type) {
         queryModel = Driver
     else
         return null;
-
+    console.log("Fine upto here");
     await queryModel.find(data, function (err, result) {
         if (err) {
             throw "Database error";
@@ -44,6 +43,7 @@ async function readUserByIds(ids, type) {
 
         }
     }).catch((e) => {
+        console.log("This is the error while reading");
         console.log(e);
         return null;
     });

@@ -83,6 +83,8 @@ exports.GetOrderStatistics = async function(req,res,next){
         var placed=[];
         var approved=[];
         var assigned=[];
+        var shipping=[];
+        var arrived=[];
         var rejected=[];
         for (let i=0;i<total;i++){
             var order =val[i]; 
@@ -97,6 +99,13 @@ exports.GetOrderStatistics = async function(req,res,next){
             }
             else if(order.status=="rejected"){
                 rejected.push(order);
+            }
+            else if(order.status=="arrived"){
+                arrived.push(order);
+            }
+            
+            else if(order.status=="shipping"){
+                shipping.push(order);
             }
         }
         return res.status(200).json({
@@ -113,14 +122,22 @@ exports.GetOrderStatistics = async function(req,res,next){
                 counts:approved.length,
                 orders:approved,
             },
-            assigned_to_driver:{
-                counts:assigned.length,
-                orders:assigned
-            }, 
             rejected_by_admin:{
                 counts:rejected.length,
                 orders:rejected
-            }
+            },
+            assigned_to_driver:{
+                counts:assigned.length,
+                orders:assigned
+            },
+            shipping:{
+                counts:shipping.length,
+                orders:shipping
+            },
+            arrived:{
+                counts:arrived.length,
+                orders:arrived,
+            } 
         });
     }).catch((e)=>{
         console.log(e);
@@ -167,7 +184,7 @@ exports.VerifyOrder = async function(req,res,next){
                     }).catch((err)=>{
                         throw "Error while approving the order"
                     });
-                    update_driver.orders.push(order);
+                    update_driver.orders.push(order.orderid);
                     update_driver.save().then((drvr)=>{
                         update_driver=drvr;
                     }); 

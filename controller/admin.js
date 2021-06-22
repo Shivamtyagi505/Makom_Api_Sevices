@@ -182,6 +182,7 @@ exports.SearchDriver = async function(req,res,next){
     const filters = req.query;
     const filteredUsers = [];
   await  database.readUserByIds(null,"driver").then((data)=>{
+      print(data);
        filteredUsers = data.filter(user => {
             let isValid = true;
             for (key in filters) { 
