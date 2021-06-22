@@ -46,7 +46,7 @@ module.exports= function(app){
 
     //***********************************admin APIs *****************************************
     apiRoutes.post('/admin/signin',adminAuthController.Signin);
-    apiRoutes.post('/admin/newadmin',auth.AuthManager,adminAuthController.NewAdmin);
+    apiRoutes.post('/admin/newadmin',adminAuthController.NewAdmin);
     apiRoutes.post('/admin/newdriver',auth.AuthManager,driverAuthController.Signup);
 
     
