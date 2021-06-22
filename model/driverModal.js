@@ -30,7 +30,7 @@ const DriverSchema = new Schema({
         required:true
     },
     orders:{
-        type:[String]
+        type:[{}]
     },
     city: {
         type: String,

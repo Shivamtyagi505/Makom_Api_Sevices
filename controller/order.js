@@ -139,6 +139,7 @@ exports.VerifyOrder = async function(req,res,next){
  
     if(orderid&&action&&action=="approved"||action=="rejected"){
         database.readObjectsByIds([orderid],"order").then((orders)=>{
+            console.log(orders);
             if(orders.length==0)
             throw "No order available";
           var  order =orders[0];
@@ -166,7 +167,7 @@ exports.VerifyOrder = async function(req,res,next){
                     }).catch((err)=>{
                         throw "Error while approving the order"
                     });
-                    update_driver.orders.push(orderid);
+                    update_driver.orders.push(order);
                     update_driver.save().then((drvr)=>{
                         update_driver=drvr;
                     }); 
