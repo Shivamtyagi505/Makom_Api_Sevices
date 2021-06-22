@@ -221,7 +221,17 @@ exports.UpdateProfile = async function(req,res,next){
 
 
 exports.GetMyOrders = async function(req,res,next){
-    var order_ids= req.user.order;
+    var order_ids= req.user.orders;
+    if(!order_ids){
+        return res.status(401).json(
+            {
+                error:"No data found"
+            }
+        )
+    }
+
     req.body.ids=order_ids; 
+    console.log("we are here")
+    console.log(req.body.ids);
     next();
 }

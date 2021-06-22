@@ -30,12 +30,10 @@ module.exports= function(app){
     //create a new order
 
     apiRoutes.post('/seller/order/create',auth.AuthManager,OrderController.CreateOrder);
-    apiRoutes.get('/seller/order/statistics',auth.AuthManager,OrderController.GetSellerOrderStatistics);
     apiRoutes.post('/seller/myorders',auth.AuthManager,sellerAuthController.GetMyOrders,OrderController.GetOrder);
 
     apiRoutes.post('/seller/product/create',auth.AuthManager,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.AuthManager,ProductController.GetProducts);
-    apiRoutes.delete('/seller/product/delete',auth.AuthManager,ProductController.DeleteProducts);
     
 
      //******************************************driver APIs********************************
@@ -65,13 +63,13 @@ module.exports= function(app){
 
 
     //fetch driver all or by id list
-    apiRoutes.get('/admin/driver/details',auth.AuthManager,driverAuthController.GetDriver);
+    apiRoutes.post('/admin/driver/details',auth.AuthManager,driverAuthController.GetDriver);
     //similar to driver pass a list of ids or no ids to receive ids of all sellers
-    apiRoutes.get('/admin/seller/details',auth.AuthManager,sellerAuthController.GetSeller);
+    apiRoutes.post('/admin/seller/details',auth.AuthManager,sellerAuthController.GetSeller);
  
     
     //fetch order all or by id list
-    apiRoutes.get('/admin/order/details',auth.AuthManager,OrderController.GetOrder);
+    apiRoutes.post('/admin/order/details',auth.AuthManager,OrderController.GetOrder);
     apiRoutes.get('/admin/order/statistics',auth.AuthManager,OrderController.GetOrderStatistics);
     //set url for API v1 group routes
 
