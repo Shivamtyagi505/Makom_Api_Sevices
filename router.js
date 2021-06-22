@@ -28,7 +28,7 @@ module.exports= function(app){
     //update profile
     apiRoutes.post('/seller/profile',auth.AuthManager,sellerAuthController.UpdateProfile);
     //create a new order
-
+    apiRoutes.get('/seller/statistics',auth.AuthManager,OrderController.GetSellerOrderStatistics);
     apiRoutes.post('/seller/order/create',auth.AuthManager,OrderController.CreateOrder);
     apiRoutes.post('/seller/myorders',auth.AuthManager,sellerAuthController.GetMyOrders,OrderController.GetOrder);
 

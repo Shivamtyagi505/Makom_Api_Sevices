@@ -229,9 +229,7 @@ exports.GetMyOrders = async function(req,res,next){
             }
         )
     }
-
-    req.body.ids=order_ids; 
-    console.log("we are here")
-    console.log(req.body.ids);
+    console.log(order_ids);
+    req.body.ids=order_ids;  
     next();
 }

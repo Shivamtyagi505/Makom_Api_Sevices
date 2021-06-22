@@ -149,7 +149,8 @@ exports.GetOrderStatistics = async function(req,res,next){
 }
 
 exports.GetSellerOrderStatistics = async function(req,res,next){
-    await database.readUserByIds(req.user.products,"seller").then((val)=>{
+     
+    await database.readObjectsByIds(req.user.orders,"order").then((val)=>{
           var total= val.length;
           var completed=[];
           var placed=[];
