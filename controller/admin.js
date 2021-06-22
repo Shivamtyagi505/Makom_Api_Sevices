@@ -176,3 +176,25 @@ exports.ChangeDriverStatus = async function(req,res,next){
             });
         });  
 }
+ 
+// update driver status by id;
+exports.SearchDriver = async function(req,res,next){
+    const filters = req.query;
+    const filteredUsers = [];
+  await  database.readUserByIds(null,"driver").then((data)=>{
+       filteredUsers = data.filter(user => {
+            let isValid = true;
+            for (key in filters) { 
+              isValid = isValid && user[key] == filters[key];
+            }
+            return isValid;
+          });
+          res.status(200).json({filteredUsers});
+    }).catch((err)=>{
+        console.log("Error");
+        res.status(401).json({
+            "error":"Error while reading the data from database"
+        });
+    })
+ 
+}

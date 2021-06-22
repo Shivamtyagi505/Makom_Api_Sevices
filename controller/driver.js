@@ -57,6 +57,7 @@ exports.Signin = async function (req, res, next) {
     var dbuser = null;
     var email = req.body.email
     try {
+        console.log("Reading the driver from database");
         //finding the driver in database from the email provided.
         await database.readUserByEmail(email,"driver").then((val) => {
             dbuser = val;
@@ -81,7 +82,7 @@ exports.Signin = async function (req, res, next) {
                         address:dbuser.address??"",
                         city:dbuser.city??"",
                         state:dbuser.state??"",
-                        order:dbuser.order,
+                        orders:dbuser.orders,
                         isblocked:dbuser.isblocked,
                      }
                     //generating and sending the auth token as it will be required for furthur requests.

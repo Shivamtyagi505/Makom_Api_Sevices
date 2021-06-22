@@ -52,6 +52,7 @@ module.exports= function(app){
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
     apiRoutes.post('/admin/driver/changestatus',auth.AuthManager,adminAuthController.ChangeDriverStatus);
+    apiRoutes.get('/admin/driver/search',auth.AuthManager,adminAuthController.SearchDriver);
     //admin order previledge 
     // if id as a query parameter is passed then info regarding single order will be provided either response will be whole list of orders.
     
