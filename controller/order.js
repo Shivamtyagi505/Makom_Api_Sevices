@@ -31,6 +31,7 @@ exports.CreateOrder = async function (req, res, next) {
                 status: "Placed",  
                 pickofflocation:req.body.pickofflocation,
                 destinationlocation:req.body.destinationlocation,
+                currentlocation:{}
             });  
            await database.createOrder(OrderPlace,req.user).then((val) => {
                 if (val == null) {
@@ -152,8 +153,7 @@ exports.VerifyOrder = async function(req,res,next){
     let driverid = req.body.driverid;
     let orderid=req.body.orderid;
     let action= req.body.action;
- 
- 
+
     if(orderid&&action&&action=="approved"||action=="rejected"){
         database.readObjectsByIds([orderid],"order").then((orders)=>{
             console.log(orders);

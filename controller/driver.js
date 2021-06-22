@@ -194,6 +194,31 @@ exports.UpdateStatus = async function(req,res,next){
     });
 }
 //driver accept or decline the order
+exports.UpdateLocation = async function(req,res,next){
+    let id= req.body.id;
+    let location = req.body.currentlocation
+    database.readObjectsByIds([id],"order").then((result)=>{
+        let order=  result[0];
+        order.currentLocation = location;
+        order.save().then((resp)=>{ 
+        return res.status(200).json({
+            message:"Location updated",
+            order:resp
+        });
+        }).catch((err)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Request Failed"
+            });    
+        })
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+    
+}
 
 exports.OrderVerify = async function(req,res,next){
     var user = req.user;  
@@ -210,9 +235,17 @@ exports.OrderVerify = async function(req,res,next){
                 })
             }
             if(action=="rejected"){
-                res.status(200).json({
-                    status:"Request successfully placed"    
-                });
+                user.orders.pop(orderid);
+                user.save().then((result)=>{
+                    res.status(200).json({
+                        status:"Request successfully placed",    
+                     });
+                }).catch((err)=>{
+
+                    res.status(401).json({
+                        error:"Service not available"    
+                    });
+                })
             }else if(action=="accepted"&&orderid){ 
                      var order = orders[0];   
                     order.status="assigned";
