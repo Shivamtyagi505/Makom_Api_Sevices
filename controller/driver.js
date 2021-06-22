@@ -228,7 +228,7 @@ exports.OrderVerify = async function(req,res,next){
 
  
     if(orderid&&action&&action=="accepted"||action=="rejected"){
-       await database.readOrderByIds([orderid]).then((orders)=>{
+       await database.readObjectsByIds([orderid],"order").then((orders)=>{
             if(!orders){
                 res.status(401).json({
                     error:"Unable to find your order"
