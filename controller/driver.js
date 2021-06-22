@@ -115,7 +115,7 @@ exports.Signin = async function (req, res, next) {
 exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;
     var alldrivers=[];
-        database.readUserByIds(ids,"driver").then((result)=>{
+     await database.readUserByIds(ids,"driver").then((result)=>{
             alldrivers = result.map(val=>{
                 return {
                     uuid:val.uuid,
@@ -158,7 +158,7 @@ exports.GetProfile = async function(req,res,next){
 }
 exports.GetOrders = async function(req,res,next){
     var ids = req.user.orders;
-    database.readObjectsByIds(ids,"order").then((result)=>{
+  await database.readObjectsByIds(ids,"order").then((result)=>{
         return res.status(200).json({
             orders: result
         });
@@ -172,7 +172,7 @@ exports.GetOrders = async function(req,res,next){
 exports.UpdateStatus = async function(req,res,next){
     var id = req.body.id;
     var status = req.body.status;
-    database.readObjectsByIds([id],"order").then((result)=>{
+  await database.readObjectsByIds([id],"order").then((result)=>{
         let order=  result[0];
         order.status = status;
         order.save().then((resp)=>{ 
@@ -197,7 +197,7 @@ exports.UpdateStatus = async function(req,res,next){
 exports.UpdateLocation = async function(req,res,next){
     let id= req.body.id;
     let location = req.body.currentlocation
-    database.readObjectsByIds([id],"order").then((result)=>{
+  await database.readObjectsByIds([id],"order").then((result)=>{
         let order=  result[0];
         order.currentLocation = location;
         order.save().then((resp)=>{ 
@@ -228,7 +228,7 @@ exports.OrderVerify = async function(req,res,next){
 
  
     if(orderid&&action&&action=="accepted"||action=="rejected"){
-        database.readOrderByIds([orderid]).then((orders)=>{
+       await database.readOrderByIds([orderid]).then((orders)=>{
             if(!orders){
                 res.status(401).json({
                     error:"Unable to find your order"

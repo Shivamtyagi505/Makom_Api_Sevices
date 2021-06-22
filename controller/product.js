@@ -47,7 +47,7 @@ exports.CreateProduct = async function (req, res, next) {
         
         exports.GetProducts = async function(req,res,next){
             let ids = req.user.products;
-            database.readObjectsByIds(ids,"product").then((val)=>{
+           await database.readObjectsByIds(ids,"product").then((val)=>{
                 return res.status(200).json({
                     products: val
                 });

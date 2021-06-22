@@ -121,7 +121,7 @@ exports.Signin = async function (req, res, next) {
 exports.GetSeller = async function(req,res,next){
     var ids = req.body.ids;
     var allsellers=[];
-        database.readUserByIds(ids,"seller").then((result)=>{
+     await  database.readUserByIds(ids,"seller").then((result)=>{
             allsellers = result.map(dbuser=>{
                 return {
                         uuid:dbuser.uuid,
@@ -189,7 +189,7 @@ exports.UpdateProfile = async function(req,res,next){
         user.state=state;
     }
     
-    database.saveUser(user).then(user => {
+  await database.saveUser(user).then(user => {
         if (user) {
             var user_data={
                 uuid:user.uuid,

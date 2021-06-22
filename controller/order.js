@@ -64,7 +64,7 @@ exports.CreateOrder = async function (req, res, next) {
 exports.GetOrder = async function(req,res,next){
     var ids = req.body.ids;
     var allorders=[];
-        database.readObjectsByIds(ids,"order").then((result)=>{
+     await database.readObjectsByIds(ids,"order").then((result)=>{
             allorders = result;
             return res.status(200).json({
                 orders: allorders
@@ -78,7 +78,7 @@ exports.GetOrder = async function(req,res,next){
      
 }
 exports.GetOrderStatistics = async function(req,res,next){
-    database.readObjectsByIds(null,"order").then((val)=>{
+  await database.readObjectsByIds(null,"order").then((val)=>{
         var total= val.length;
         var completed=[];
         var placed=[];
@@ -155,7 +155,7 @@ exports.VerifyOrder = async function(req,res,next){
     let action= req.body.action;
 
     if(orderid&&action&&action=="approved"||action=="rejected"){
-        database.readObjectsByIds([orderid],"order").then((orders)=>{
+     await  database.readObjectsByIds([orderid],"order").then((orders)=>{
             console.log(orders);
             if(orders.length==0)
             throw "No order available";

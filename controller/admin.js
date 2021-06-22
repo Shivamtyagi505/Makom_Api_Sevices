@@ -28,7 +28,7 @@ exports.Signin = async function (req, res, next) {
         });
         if (dbuser != null) {
             //if admin exists with the current email than comparing the hash with the password field.
-            await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
+             bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
                 if (result) {  
                     let data = {
                         id:dbuser.uuid
@@ -104,7 +104,7 @@ var account_activated = "account is active now you will be able to use all makom
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
     let id = req.body.id;
-    database.readUserByIds([id],"seller").then((val)=>{
+  await database.readUserByIds([id],"seller").then((val)=>{
          
         if(val==null||val[0]==null){
             return res.status(401).json({ 
@@ -115,7 +115,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
         user_data.isblocked=req.body.isblocked;
         var body = user_data.isblocked?account_deactivated:account_activated;
          console.log(user_data)
-        database.saveUser(user_data).then((result)=>{ 
+       database.saveUser(user_data).then((result)=>{ 
             mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
                 res.status(200).json({
                     isblocked:user_data.isblocked,
@@ -142,7 +142,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
     let id = req.body.id;
-        database.readUserByIds([id],"driver").then((val)=>{
+     await  database.readUserByIds([id],"driver").then((val)=>{
             if(val==null||val[0]==null){
                 return res.status(401).json({ 
                     message:"Invalid driver id",
