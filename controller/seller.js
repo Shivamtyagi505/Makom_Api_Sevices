@@ -118,7 +118,7 @@ exports.Signin = async function (req, res, next) {
 };
 
 //get selller or particular seller by name;
-exports.GetSeller = async function(req,res,next){
+exports.GetSellerByName = async function(req,res,next){
     var name = req.body.name;
     var allsellers=[];
      await  Seller.find({"name": name}).then((result)=>{

@@ -64,13 +64,18 @@ module.exports= function(app){
 
     //fetch driver all or by id list
     apiRoutes.post('/admin/driver/details',auth.AuthManager,driverAuthController.GetDriver);
+    //fetch driver by name
+    apiRoutes.post('/admin/driver/detailsByName',auth.AuthManager,driverAuthController.GetDriverByName);
     //similar to driver pass a list of ids or no ids to receive ids of all sellers
     apiRoutes.post('/admin/seller/details',auth.AuthManager,sellerAuthController.GetSeller);
+
+    //fetch seller by name
+    apiRoutes.post('/admin/seller/detailsByName',auth.AuthManager,sellerAuthController.GetSellerByName);
+    
  
     
     //fetch order all or by id list
     apiRoutes.post('/admin/order/details',auth.AuthManager,OrderController.GetOrder);
-    apiRoutes.post('/admin/order/details',auth.AuthManager,OrderController.GetOrderByName);
     apiRoutes.get('/admin/order/statistics',auth.AuthManager,OrderController.GetOrderStatistics);
     //set url for API v1 group routes
 
