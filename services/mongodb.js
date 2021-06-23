@@ -17,7 +17,6 @@ const { json } = require('express');
 async function readUserByIds(ids, type) {
 
     console.log("Fetching query of " + type);
-    var user = [];
     var data={};
     if (ids) {
         data = {
@@ -35,19 +34,17 @@ async function readUserByIds(ids, type) {
     else
         return null;
     console.log("Fine upto here");
-    await queryModel.find(data, function (err, result) {
+    return   await queryModel.find(data, function (err, result) {
         if (err) {
-            throw "Database error";
-        } else {
-            user = result;
-
+          return [];
+        } else { 
+            return result;
         }
     }).catch((e) => {
         console.log("This is the error while reading");
         console.log(e);
-        return null;
-    });
-    return user;
+        return [];
+    }); 
 }
 
 async function readUserByEmail(email, type) {
@@ -67,19 +64,16 @@ async function readUserByEmail(email, type) {
     else
         return null;
 
-    await queryModel.findOne(data, function (err, result) {
-        if (err) {
-            throw "Database error";
-        } else {
-            console.log("Got the result")
-            user = result;
-            console.log(user)
+   return await queryModel.findOne(data, function (err, result) {
+        if (err) { 
+            return [];
+        } else {  
+            return result;
         }
     }).catch((e) => {
         console.log(e);
-        return null;
-    });
-    return user;
+        return [];
+    }); 
 }
 
 async function readObjectsByIds(ids, type) {
@@ -103,17 +97,15 @@ async function readObjectsByIds(ids, type) {
         return null;
     }
 
-    await QueryModel.find(data, function (err, result) {
+  return  await QueryModel.find(data, function (err, result) {
         if (err) {
-            throw "Database error";
-        } else {
-            objects = result;
+        return []; 
+        } else { 
+            return result;
         }
-    }).catch((e) => {
-        console.log(e);
-        return null;
-    });
-    return objects;
+    }).catch((e) => { 
+        return [];
+    }); 
 }
 
 
