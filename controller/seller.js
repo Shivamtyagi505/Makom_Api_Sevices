@@ -117,6 +117,39 @@ exports.Signin = async function (req, res, next) {
     }
 };
 
+//get selller or particular seller by name;
+exports.GetSeller = async function(req,res,next){
+    var name = req.body.name;
+    var allsellers=[];
+     await  Seller.find({"name": name}).then((result)=>{
+            allsellers = result.map(dbuser=>{
+                return {
+                        uuid:dbuser.uuid,
+                        name:dbuser.name,
+                        email:dbuser.email,
+                        phone:dbuser.phone,
+                        address:dbuser.address,
+                        category:dbuser.category,
+                        city:dbuser.city,
+                        state:dbuser.state,
+                        order:dbuser.orders,
+                        products:dbuser.products,
+                        isblocked:dbuser.isblocked,
+                        isverified:dbuser.isverified,
+                }
+            })
+            return res.status(200).json({
+                sellers: allsellers
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+     
+}
+
 //get selller or particular seller by id;
 exports.GetSeller = async function(req,res,next){
     var ids = req.body.ids;
@@ -139,7 +172,8 @@ exports.GetSeller = async function(req,res,next){
                 }
             })
             return res.status(200).json({
-                sellers: allsellers
+                sellers: allsellers,
+                count: ids.length
             });
         }).catch((e)=>{
             console.log(e);

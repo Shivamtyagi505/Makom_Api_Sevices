@@ -67,7 +67,8 @@ exports.GetOrder = async function(req,res,next){
      await database.readObjectsByIds(ids,"order").then((result)=>{
             allorders = result;
             return res.status(200).json({
-                orders: allorders
+                orders: allorders,
+                count: ids.count
             });
         }).catch((e)=>{
             console.log(e);
@@ -77,6 +78,22 @@ exports.GetOrder = async function(req,res,next){
         });
      
 }
+exports.GetOrderByName = async function(req,res,next){
+    var name = req.body.name;
+    var allorders=[];
+     await database.readObjectsByIds(name,"order").then((result)=>{
+            allorders = result;
+            return res.status(200).json({
+                orders: allorders
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+    }
+     
 exports.GetOrderStatistics = async function(req,res,next){
   await database.readObjectsByIds(null,"order").then((val)=>{
         var total= val.length;

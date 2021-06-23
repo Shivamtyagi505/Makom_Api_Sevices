@@ -111,6 +111,33 @@ exports.Signin = async function (req, res, next) {
     }
 };
 
+//get selller or particular driver by name;
+exports.GetDriverByName = async function(req,res,next){
+    var name = req.body.name;
+    var alldrivers=[];
+     await  Driver.find({"name": name}).then((result)=>{
+            alldrivers = result.map(dbuser=>{
+                return {
+                    uuid:val.uuid,
+                    name:val.name,
+                    email:val.email??"",
+                    phone:val.phone??"",
+                    address:val.address??"",
+                    city:val.city??"",
+                    state:val.state??""
+                }
+            })
+            return res.status(200).json({
+                drivers: alldrivers
+            });
+        }).catch((e)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Bad Request"
+            });
+        });
+     
+}
 //get drivers or particular driver by id;
 exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;

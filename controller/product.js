@@ -50,7 +50,8 @@ exports.CreateProduct = async function (req, res, next) {
             let ids = req.user.products;
            await database.readObjectsByIds(ids,"product").then((val)=>{
                 return res.status(200).json({
-                    products: val
+                    products: val,
+                    count: ids.length
                 });
             }).catch((e)=>{
                 console.log(e);
