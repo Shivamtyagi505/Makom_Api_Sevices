@@ -68,7 +68,7 @@ exports.GetOrder = async function(req,res,next){
             allorders = result;
             return res.status(200).json({
                 orders: allorders,
-                count: ids.count
+                count: allorders.length
             });
         }).catch((e)=>{
             console.log(e);

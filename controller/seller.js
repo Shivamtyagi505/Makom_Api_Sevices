@@ -173,7 +173,7 @@ exports.GetSeller = async function(req,res,next){
             })
             return res.status(200).json({
                 sellers: allsellers,
-                count: ids.length
+                count: allsellers.length
             });
         }).catch((e)=>{
             console.log(e);
