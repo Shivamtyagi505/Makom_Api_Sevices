@@ -34,6 +34,7 @@ module.exports= function(app){
 
     apiRoutes.post('/seller/product/create',auth.AuthManager,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.AuthManager,ProductController.GetProducts);
+    apiRoutes.post('/seller/product/remove',auth.AuthManager,ProductController.RemoveProducts);
     
 
      //******************************************driver APIs********************************
