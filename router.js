@@ -71,6 +71,9 @@ module.exports= function(app){
 
     //fetch seller by name
     apiRoutes.post('/admin/seller/detailsByName',auth.AuthManager,sellerAuthController.GetSellerByName);
+
+    //fetch order by name
+    apiRoutes.post('/admin/order/detailsById',auth.AuthManager,OrderController.GetOrderByName);
     
  
     
