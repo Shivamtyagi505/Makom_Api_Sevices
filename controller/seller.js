@@ -90,6 +90,7 @@ exports.Signin = async function (req, res, next) {
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
                         };
+                        
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
