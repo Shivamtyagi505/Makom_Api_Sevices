@@ -143,6 +143,7 @@ exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;
     var alldrivers=[];
      await database.readUserByIds(ids,"driver").then((result)=>{
+        console.log(result.length)
             alldrivers = result.map(val=>{
                 return {
                     uuid:val.uuid,
@@ -154,9 +155,9 @@ exports.GetDriver = async function(req,res,next){
                     state:val.state??"",
                 }
             })
-            console.log(alldrivers)
+            console.log(alldrivers.length)
             return res.status(200).json({
-                count:alldrivers.length
+                count:alldrivers.length,
                 drivers: alldrivers
             });
         }).catch((e)=>{
