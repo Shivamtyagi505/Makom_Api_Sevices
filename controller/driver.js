@@ -9,7 +9,8 @@ const jwt = require('jsonwebtoken');
 const Driver = require('../model/driverModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
-const mailservices = require('../controller/email')
+const mailservices = require('../controller/email');
+const { db } = require('../model/driverModal');
 
 
 //driver  sign up only under admin control no independent signup
@@ -86,6 +87,7 @@ exports.Signin = async function (req, res, next) {
                         isblocked:dbuser.isblocked,
                      }
                     //generating and sending the auth token as it will be required for furthur requests.
+                    if(dbuser.isblocked != true){
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
                     dbuser.save().then((result)=>{
@@ -94,7 +96,12 @@ exports.Signin = async function (req, res, next) {
                             details: authToken, 
                             user:auth_res
                         });
-                    });   
+                    });
+                }else{
+                    res.status(401).json({
+                        error: " Driver is Blocked by Admin"
+                    })
+                }   
                 } else {
                     return res.status(401).json({
                         error: "Invalid credentials"
