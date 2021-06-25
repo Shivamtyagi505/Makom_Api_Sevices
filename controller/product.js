@@ -64,7 +64,7 @@ exports.CreateProduct = async function (req, res, next) {
         exports.RemoveProducts = async function(req,res,next){
             let ids = req.body.ids;
             let seller= req.user;
-            for (i=0;i<ids.length;i++){
+            for (let i=0;i<ids.length;i++){
                 seller.products.pop(ids[i]);
             }
           await seller.save().then((result)=>{

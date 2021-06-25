@@ -154,7 +154,9 @@ exports.GetDriver = async function(req,res,next){
                     state:val.state??"",
                 }
             })
+            console.log(alldrivers)
             return res.status(200).json({
+                count:alldrivers.length
                 drivers: alldrivers
             });
         }).catch((e)=>{
