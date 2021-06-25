@@ -97,6 +97,47 @@ exports.NewAdmin = function (req, res, next) {
     });
 }
 
+exports.ActivateSeller = async function(req,res,next){
+    let id = req.body.id;
+    let isverified=req.body.isverified;
+    if(id!=null&&isverified!=null){
+       await database.readUserByIds([id],"seller").then((val)=>{
+        if(val==null||val[0]==null){
+            return res.status(401).json({ 
+                message:"Invalid seller id or seller does not exist",
+        });
+        }else{
+            val[0].isverified=isverified;
+            val[0].save().then((result)=>{ 
+                mailservices.SendMail(val[0].email,"Account verified","Dear user your account is successfully varified").then((result)=>{ 
+                    res.status(200).json({
+                        isverified:isverified,
+                        message:"seller account activated successfully"
+                    }); 
+                }).catch((e)=>{
+                    console.log(e);
+                    res.status(401).json({
+                        error:"Error with email services"
+                    });
+                });      
+            
+            }).catch((e)=>{
+                throw "Error while updating the seller status check for proper isverified flag in input";
+            });
+        }
+       }).catch((err)=>{
+        return res.status(401).json({
+            error:err
+        });    
+       });
+        
+    }else{
+        return res.status(401).json({
+            error:"isverified or id not provided"
+        });
+    }
+}
+
 
 var account_deactivated="account is no longer active it has been blocked by the admin you will no longer be able to use makom services.";
 var account_activated = "account is active now you will be able to use all makom services from now."
