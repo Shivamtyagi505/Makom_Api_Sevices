@@ -26,7 +26,7 @@ exports.CreateOrder = async function (req, res, next) {
                     phone:req.user.phone,
                     location:req.user.location,
                     email:req.user.email
-                },  
+                 },  
                 products:req.body.products,
                 status: "placed",  
                 pickofflocation:req.body.pickofflocation,

@@ -52,6 +52,8 @@ module.exports= function(app){
 
     //verify seller
     apiRoutes.post('/admin/seller/activate',auth.AuthManager,adminAuthController.ActivateSeller);
+    //automatic driver assign
+  //  apiRoutes.post('/admin/seller/autodeli',auth.AuthManager,adminAuthController.AutoDeli);
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
@@ -82,6 +84,7 @@ module.exports= function(app){
     //fetch order all or by id list
     apiRoutes.post('/admin/order/details',auth.AuthManager,OrderController.GetOrder);
     apiRoutes.get('/admin/order/statistics',auth.AuthManager,OrderController.GetOrderStatistics);
+    apiRoutes.get('/admin/activities',auth.AuthManager,adminAuthController.LoginActivities);
     //set url for API v1 group routes
 
     app.use('/v1/api',apiRoutes);

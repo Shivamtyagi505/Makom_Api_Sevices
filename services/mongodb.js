@@ -7,6 +7,8 @@ const Driver = require('../model/driverModal');
 const Order = require('../model/orderModal');
 const Product = require('../model/productModal');
 
+const LoginActivity = require('../model/loginActivity');
+
 //UTILS
 const log = require('../util/logger');
 const { json } = require('express');
@@ -35,6 +37,7 @@ async function readUserByIds(ids, type) {
         return null;
     console.log("Fine upto here");
     return   await queryModel.find(data, function (err, result) {
+    
         if (err) {
           return [];
         } else { 
@@ -74,6 +77,17 @@ async function readUserByEmail(email, type) {
         console.log(e);
         return [];
     }); 
+}
+async function readActivities(){
+    return  await LoginActivity.find({}, function (err, result) {
+        if (err) {
+        return []; 
+        } else { 
+            return result;
+        }
+    }).catch((e) => { 
+        return [];
+    });  
 }
 
 async function readObjectsByIds(ids, type) {
@@ -175,8 +189,10 @@ module.exports = {
     readUserByIds,
     readUserByEmail,
     readObjectsByIds,
+    readActivities,
     //write query
     saveUser,
     createOrder,
     createProduct, 
+    
 }

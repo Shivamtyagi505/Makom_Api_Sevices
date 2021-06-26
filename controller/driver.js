@@ -11,6 +11,7 @@ const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 const mailservices = require('../controller/email');
 const { db } = require('../model/driverModal');
+const Activity = require('../model/loginActivity');
 
 
 //driver  sign up only under admin control no independent signup
@@ -90,6 +91,15 @@ exports.Signin = async function (req, res, next) {
                     if(dbuser.isblocked != true){
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
+                    let driver_activity=new Activity({
+                        device:req.headers['user-agent'],
+                        ipaddress:req.ip ||null,
+                        userid:val._id,
+                        email:req.body.email
+                      })
+                     database.saveActivity(driver_activity)
+        
+
                     dbuser.save().then((result)=>{
                         return res.status(200).json({
                             message: "Successfully logged in",
@@ -160,6 +170,7 @@ exports.GetDriver = async function(req,res,next){
                     address:val.address??"",
                     city:val.city??"",
                     state:val.state??"",
+                    isblocked:val.isblocked??""
                 }
             })
             console.log(alldrivers.length)

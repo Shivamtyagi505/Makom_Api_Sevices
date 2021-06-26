@@ -12,6 +12,7 @@ const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 const mailservices = require('../controller/email')
+const Activity = require('../model/loginActivity');
 
 //admin signin
 exports.Signin = async function (req, res, next) {
@@ -36,6 +37,13 @@ exports.Signin = async function (req, res, next) {
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, ADMINSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
+                    let admin_activity=new Activity({
+                        device:req.headers['user-agent'],
+                        ipaddress:req.ip ||null,
+                        userid:dbuser.uuid || null,
+                        email:req.body.email
+                      })
+                    database.saveActivity(admin_activity)
                     dbuser.save().then((result)=>{
                         return res.status(200).json({
                             message: "Successfully logged in",
@@ -109,7 +117,7 @@ exports.ActivateSeller = async function(req,res,next){
         }else{
             val[0].isverified=isverified;
             val[0].save().then((result)=>{ 
-                mailservices.SendMail(val[0].email,"Account verified","Dear user your account is successfully varified").then((result)=>{ 
+                mailservices.SendMail(val[0].email,"Account verified","Dear user your account is successfully verified").then((result)=>{ 
                     res.status(200).json({
                         isverified:isverified,
                         message:"seller account activated successfully"
@@ -134,6 +142,58 @@ exports.ActivateSeller = async function(req,res,next){
     }else{
         return res.status(401).json({
             error:"isverified or id not provided"
+        });
+    }
+}
+exports.LoginActivities = async function(req,res,next){
+    database.readActivities().then((val)=>{
+        return res.status(200).json({ 
+            activities:val,
+        });      
+    }).catch((err)=>{
+        return res.status(401).json({ 
+            message:"No login activities available",
+        });      
+    })
+}
+
+exports.AutoDeli = async function(req,res,next){
+    let id = req.body.id;
+    let isAutomaticDelivery=req.body.isAutomaticDelivery;
+    if(id!=null&&isAutomaticDelivery!=null){
+       await database.readUserByIds([id],"seller").then((val)=>{
+        if(val==null||val[0]==null){
+            return res.status(401).json({ 
+                message:"Invalid seller id or seller does not exist",
+        });
+        }else{
+            val[0].isAutomaticDelivery=isAutomaticDelivery;
+            val[0].save().then((result)=>{ 
+                mailservices.SendMail(val[0].email,"Automatic delivery","Dear user driver is assigned").then((result)=>{ 
+                    res.status(200).json({
+                        isAutomaticDelivery:isAutomaticDelivery,
+                        message:"Driver assigned succesfully"
+                    }); 
+                }).catch((e)=>{
+                    console.log(e);
+                    res.status(401).json({
+                        error:"Error with email services"
+                    });
+                });      
+            
+            }).catch((e)=>{
+                throw "Error while updating the driver status check for proper isAutomaticDelivery flag in input";
+            });
+        }
+       }).catch((err)=>{
+        return res.status(401).json({
+            error:err
+        });    
+       });
+        
+    }else{
+        return res.status(401).json({
+            error:"isAutomaticDelivery or id not provided"
         });
     }
 }

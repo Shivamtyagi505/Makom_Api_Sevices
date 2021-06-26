@@ -10,6 +10,7 @@ const Seller = require('../model/sellerModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
 const OrderController =  require('../controller/order');
+const Activity = require('../model/loginActivity');
 
 
 
@@ -33,6 +34,8 @@ exports.Signup = function (req, res, next) {
                 state: req.body.state,
                 isverified:false,
                 isblocked:false,
+                payment_threshold:req.body.payment_threshold,
+                isAutomaticDelivery:false
             }); 
             database.saveUser(seller).then((val) => {
                 if (val == null) {
@@ -96,12 +99,22 @@ exports.Signin = async function (req, res, next) {
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        payment_threshold:dbuser.isverified,
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
                         };
                         
                     //generating and sending the auth token as it will be required for furthur requests.
                     if(dbuser.isverified&& !dbuser.isblocked){
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
+                    let driver_activity=new Activity({
+                        device:req.headers['user-agent'],
+                        ipaddress:req.ip ||null,
+                        userid:val._id,
+                        email:req.body.email
+                      })
+                     database.saveActivity(driver_activity)
+        
                     dbuser.save().then((result)=>{ 
                     return res.status(200).json({
                         message: "Successfully logged in",
@@ -150,7 +163,8 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
-                        location:dbuser.location
+                         location:dbuser.location
+ 
                 }
             })
             return res.status(200).json({
@@ -184,8 +198,10 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
-                        location:dbuser.location
-                }
+                         location:dbuser.location 
+//                        payment_threshold:dbuser.payment_threshold,
+//                        isAutomaticDelivery:dbuser.isAutomaticDelivery
+                 }
             })
             return res.status(200).json({
                 sellers: allsellers,

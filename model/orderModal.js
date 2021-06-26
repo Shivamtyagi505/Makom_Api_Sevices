@@ -51,7 +51,7 @@ const OrderSchema = new Schema({
     destinationlocation: {
         type: PlaceSchema,
         required: true,
-    },
+    }
 
 }, {
     timestamps: true,
