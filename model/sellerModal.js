@@ -27,6 +27,10 @@ const SellerSchema = new Schema({
         type:String,
         required:true
     },
+    location:{
+        type:{},
+        required:true
+    },
     phone: {
         type: String,
         required:true

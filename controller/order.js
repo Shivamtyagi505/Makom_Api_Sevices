@@ -24,11 +24,11 @@ exports.CreateOrder = async function (req, res, next) {
                     uuid:req.user.uuid,
                     name:req.user.name,
                     phone:req.user.phone,
+                    location:req.user.location,
                     email:req.user.email
-                }, 
-                payment:req.body.payment, 
+                },  
                 products:req.body.products,
-                status: "Placed",  
+                status: "placed",  
                 pickofflocation:req.body.pickofflocation,
                 destinationlocation:req.body.destinationlocation,
     
@@ -106,9 +106,9 @@ exports.GetOrderStatistics = async function(req,res,next){
         var rejected=[];
         for (let i=0;i<total;i++){
             var order =val[i]; 
-            if(order.status=="Completed"){
+            if(order.status=="completed"){
                 completed.push(order);
-            }else if(order.status=="Placed"){
+            }else if(order.status=="placed"){
                 placed.push(order);
             }else if(order.status=="approved"){
                 approved.push(order);
@@ -178,9 +178,9 @@ exports.GetSellerOrderStatistics = async function(req,res,next){
           var rejected=[];
           for (let i=0;i<total;i++){
               var order =val[i]; 
-              if(order.status=="Completed"){
+              if(order.status=="completed"){
                   completed.push(order);
-              }else if(order.status=="Placed"){
+              }else if(order.status=="placed"){
                   placed.push(order);
               }else if(order.status=="approved"){
                   approved.push(order);

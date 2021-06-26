@@ -31,10 +31,6 @@ const OrderSchema = new Schema({
         type: {},
         required: true,
     }, 
-    payment: {
-        type: String,
-        required: true,
-    },
     assignedto:{
         type:{}
     }, 

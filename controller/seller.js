@@ -27,6 +27,7 @@ exports.Signup = function (req, res, next) {
                 category:req.body.category,
                 phone:req.body.phone,
                 address:req.body.address,
+                location:req.body.location,
                 password:hash,
                 city:req.body.city,
                 state: req.body.state,
@@ -72,6 +73,11 @@ exports.Signin = async function (req, res, next) {
 
         if (dbuser != null) {
             //if user exists with the current email than comparing the hash with the password field.
+
+            //category implies
+                //0- on-demand
+                //1- ecommerce
+                //2 - subscription 
             await bcrypt.compare(req.body.password, dbuser.password, function (err, result) {
                 if (result) {  
                     let data = {
@@ -85,6 +91,7 @@ exports.Signin = async function (req, res, next) {
                         category:dbuser.category,
                         city:dbuser.city,
                         state:dbuser.state,
+                        location:dbuser.location,
                         order:dbuser.orders,
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
@@ -143,6 +150,7 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        location:dbuser.location
                 }
             })
             return res.status(200).json({
@@ -176,6 +184,7 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        location:dbuser.location
                 }
             })
             return res.status(200).json({
@@ -205,6 +214,7 @@ exports.GetProfile = async function(req,res,next){
         state:user.state??"",
         orders:user.orders,
         products:user.products,
+        location:dbuser.location
     }
     return res.status(200).json({
        user:user_data
@@ -213,7 +223,7 @@ exports.GetProfile = async function(req,res,next){
 
 exports.UpdateProfile = async function(req,res,next){
     var user = req.user;
-    const { name, phone, address, city,state} = req.body;
+    const { name, phone, address, city,state,location} = req.body;
     if(name){
         user.name=name;
     } 
@@ -229,6 +239,9 @@ exports.UpdateProfile = async function(req,res,next){
     if(state){
         user.state=state;
     }
+    if(location){
+        user.location=location;
+    }
     
   await database.saveUser(user).then(user => {
         if (user) {
@@ -239,6 +252,7 @@ exports.UpdateProfile = async function(req,res,next){
                 phone:user.phone,
                 address:user.address,
                 city:user.city,
+                location:user.location,
                 state:user.state};
           res.json({
             status: 0,
