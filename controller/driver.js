@@ -118,13 +118,13 @@ exports.GetDriverByName = async function(req,res,next){
      await  Driver.find({"name": name}).then((result)=>{
             alldrivers = result.map(dbuser=>{
                 return {
-                    uuid:val.uuid,
-                    name:val.name,
-                    email:val.email??"",
-                    phone:val.phone??"",
-                    address:val.address??"",
-                    city:val.city??"",
-                    state:val.state??""
+                    uuid:dbuser.uuid,
+                    name:dbuser.name,
+                    email:dbuser.email??"",
+                    phone:dbuser.phone??"",
+                    address:dbuser.address??"",
+                    city:dbuser.city??"",
+                    state:dbuser.state??""
                 }
             })
             return res.status(200).json({

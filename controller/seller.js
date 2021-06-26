@@ -32,6 +32,7 @@ exports.Signup = function (req, res, next) {
                 state: req.body.state,
                 isverified:false,
                 isblocked:false,
+                isAutomaticDelivery:false
             }); 
             database.saveUser(seller).then((val) => {
                 if (val == null) {
@@ -89,6 +90,7 @@ exports.Signin = async function (req, res, next) {
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
                         };
                     //generating and sending the auth token as it will be required for furthur requests.
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
@@ -136,6 +138,7 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
                 }
             })
             return res.status(200).json({
@@ -169,6 +172,7 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
                 }
             })
             return res.status(200).json({
