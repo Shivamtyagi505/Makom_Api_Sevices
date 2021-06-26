@@ -32,6 +32,7 @@ exports.Signup = function (req, res, next) {
                 state: req.body.state,
                 isverified:false,
                 isblocked:false,
+                payment_threshold:req.body.payment_threshold
             }); 
             database.saveUser(seller).then((val) => {
                 if (val == null) {
@@ -89,6 +90,8 @@ exports.Signin = async function (req, res, next) {
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        payment_threshold:dbuser.isverified
+
                         };
                         
                     //generating and sending the auth token as it will be required for furthur requests.
@@ -143,6 +146,8 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        payment_threshold:dbuser.isverified
+
                 }
             })
             return res.status(200).json({
@@ -176,6 +181,7 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+                        payment_threshold:dbuser.payment_threshold
                 }
             })
             return res.status(200).json({
