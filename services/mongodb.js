@@ -183,6 +183,17 @@ async function createProduct(product, user) {
     return product_details;
 }
 
+async function saveActivity(
+    Activity 
+){
+    
+    return  await Activity.save().then((result)=>{
+        return result
+    }).catch((e)=>{
+        console.log(e)
+    })
+}
+
   
 module.exports = {
     //read query
@@ -193,6 +204,7 @@ module.exports = {
     //write query
     saveUser,
     createOrder,
-    createProduct, 
+    createProduct,
+    saveActivity, 
     
 }
