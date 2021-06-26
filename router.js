@@ -52,6 +52,8 @@ module.exports= function(app){
 
     //verify seller
     apiRoutes.post('/admin/seller/activate',auth.AuthManager,adminAuthController.ActivateSeller);
+    //automatic driver assign
+    apiRoutes.post('/admin/seller/autodeli',auth.AuthManager,adminAuthController.AutoDeli);
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
