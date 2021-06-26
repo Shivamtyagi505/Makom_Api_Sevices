@@ -9,7 +9,8 @@ const jwt = require('jsonwebtoken');
 const Driver = require('../model/driverModal');
 const { ADMINSECRET, AUTHSECRET, MANAGERSECRET } = require('../config/secrets');
 const { TOKENEXPIRE } = require('../util/constants')
-const mailservices = require('../controller/email')
+const mailservices = require('../controller/email');
+const { db } = require('../model/driverModal');
 
 
 //driver  sign up only under admin control no independent signup
@@ -86,6 +87,7 @@ exports.Signin = async function (req, res, next) {
                         isblocked:dbuser.isblocked,
                      }
                     //generating and sending the auth token as it will be required for furthur requests.
+                    if(dbuser.isblocked != true){
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
                     dbuser.save().then((result)=>{
@@ -94,7 +96,12 @@ exports.Signin = async function (req, res, next) {
                             details: authToken, 
                             user:auth_res
                         });
-                    });   
+                    });
+                }else{
+                    res.status(401).json({
+                        error: " Driver is Blocked by Admin"
+                    })
+                }   
                 } else {
                     return res.status(401).json({
                         error: "Invalid credentials"
@@ -143,6 +150,7 @@ exports.GetDriver = async function(req,res,next){
     var ids = req.body.ids;
     var alldrivers=[];
      await database.readUserByIds(ids,"driver").then((result)=>{
+        console.log(result.length)
             alldrivers = result.map(val=>{
                 return {
                     uuid:val.uuid,
@@ -152,9 +160,12 @@ exports.GetDriver = async function(req,res,next){
                     address:val.address??"",
                     city:val.city??"",
                     state:val.state??"",
+                    isblocked:val.isblocked??""
                 }
             })
+            console.log(alldrivers.length)
             return res.status(200).json({
+                count:alldrivers.length,
                 drivers: alldrivers
             });
         }).catch((e)=>{

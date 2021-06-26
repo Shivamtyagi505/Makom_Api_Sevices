@@ -92,7 +92,9 @@ exports.Signin = async function (req, res, next) {
                         isverified:dbuser.isverified,
                         isAutomaticDelivery:dbuser.isAutomaticDelivery
                         };
+                        
                     //generating and sending the auth token as it will be required for furthur requests.
+                    if(dbuser.isverified&& !dbuser.isblocked){
                     let authToken = jwt.sign(data, AUTHSECRET, { expiresIn: TOKENEXPIRE });
                     dbuser.fcm_token=req.body.fcm_token;
                     dbuser.save().then((result)=>{ 
@@ -102,6 +104,11 @@ exports.Signin = async function (req, res, next) {
                         user:auth_data
                     });
                     });
+                }else{
+                    return res.status(401).json({
+                        error: "Seller Account is blocked or not yet verified by the admin"
+                    })
+                }
                 } else {
                     return res.status(401).json({
                         error: "Invalid credentials"

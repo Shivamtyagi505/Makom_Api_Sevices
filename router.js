@@ -34,6 +34,7 @@ module.exports= function(app){
 
     apiRoutes.post('/seller/product/create',auth.AuthManager,ProductController.CreateProduct);    
     apiRoutes.get('/seller/product',auth.AuthManager,ProductController.GetProducts);
+    apiRoutes.post('/seller/product/remove',auth.AuthManager,ProductController.RemoveProducts);
     
 
      //******************************************driver APIs********************************
@@ -49,7 +50,8 @@ module.exports= function(app){
     apiRoutes.post('/admin/newadmin',adminAuthController.NewAdmin);
     apiRoutes.post('/admin/newdriver',auth.AuthManager,driverAuthController.Signup);
 
-    
+    //verify seller
+    apiRoutes.post('/admin/seller/activate',auth.AuthManager,adminAuthController.ActivateSeller);
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     //block or unblock a seller
@@ -71,6 +73,9 @@ module.exports= function(app){
 
     //fetch seller by name
     apiRoutes.post('/admin/seller/detailsByName',auth.AuthManager,sellerAuthController.GetSellerByName);
+
+    //fetch order by name
+    apiRoutes.post('/admin/order/detailsById',auth.AuthManager,OrderController.GetOrderByName);
     
  
     

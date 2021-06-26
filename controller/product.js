@@ -61,25 +61,26 @@ exports.CreateProduct = async function (req, res, next) {
             });
         }
 
-        exports.DeleteProducts = async function(req,res,next){
-            let ids = req.user.products;
-            Seller.findByIdAndRemove(ids)
-            .then(data => {
-                if(!data) {
-                    return res.status(404).send({
-                        message: "Note not found with id " + ids
-                    });
-                }
-                res.send({message: "Note deleted successfully!"});
-            }).catch(err => {
-                if(err.kind === 'ObjectId' || err.name === 'NotFound') {
-                    return res.status(404).send({
-                        message: "Note not found with id " + ids
-                    });                
-                }
-                return res.status(500).send({
-                    message: "Could not delete note with id " + ids
-                });
-            });
+        exports.RemoveProducts = async function(req,res,next){
+            let ids = req.body.ids;
+            let seller= req.user;
+            for (let i=0;i<ids.length;i++){
+                seller.products.pop(ids[i]);
+            }
+          await seller.save().then((result)=>{
+                Product.findByIdAndRemove(ids).then(data=>{
+                    res.status(200).json({
+                       msg:"product removed successfully" 
+                    })
+                }).catch((err)=>{
+                    res.status(401).json({
+                        error:"Error no product with these ids exists" 
+                     })
+                })
+            }).catch((err)=>{
+                res.status(401).json({
+                    error:"Error communicating with database" 
+                 })
+            })
         };
         
