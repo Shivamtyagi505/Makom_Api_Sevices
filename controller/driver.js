@@ -160,6 +160,7 @@ exports.GetDriver = async function(req,res,next){
                     address:val.address??"",
                     city:val.city??"",
                     state:val.state??"",
+                    isblocked:val.isblocked??""
                 }
             })
             console.log(alldrivers.length)
