@@ -290,7 +290,6 @@ exports.UpdateProfile = async function(req,res,next){
       });
 }
 
-
 exports.GetMyOrders = async function(req,res,next){
     var order_ids= req.user.orders;
     if(!order_ids){

@@ -268,6 +268,38 @@ exports.UpdateLocation = async function(req,res,next){
     
 }
 
+exports.MarkComplete = async function(req,res,next){
+    let id=req.body.id;
+    let secretcode=req.body.secretcode; 
+  await database.readObjectsByIds([id],"order").then((result)=>{
+        let order=  result[0]; 
+        if(secretcode==order.secretcode){
+           order.status="completed"
+           order.save().then((resp)=>{ 
+            return res.status(200).json({
+                message:"Order completed",
+            });
+        }).catch((err)=>{
+            console.log(e);
+            return res.status(401).json({
+                error: "Issue while verifying secret code"
+            });    
+        })
+        }else{
+            return res.status(401).json({
+                error: "Secret code not verified"
+            });
+        }
+        
+    }).catch((e)=>{
+        console.log(e);
+        return res.status(401).json({
+            error: "Bad Request"
+        });
+    });
+
+}
+
 exports.OrderVerify = async function(req,res,next){
     var user = req.user;  
     let orderid=req.body.orderid;

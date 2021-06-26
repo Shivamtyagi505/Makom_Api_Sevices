@@ -43,6 +43,7 @@ module.exports= function(app){
     apiRoutes.get('/driver/order/myorders',auth.AuthManager,driverAuthController.GetOrders);
     apiRoutes.post('/driver/order/verify',auth.AuthManager,driverAuthController.OrderVerify);
     apiRoutes.post('/driver/order/status',auth.AuthManager,driverAuthController.UpdateStatus);
+    apiRoutes.post('/driver/order/complete',auth.AuthManager,driverAuthController.MarkComplete);
     apiRoutes.post('/driver/order/updatelocation',auth.AuthManager,driverAuthController.UpdateLocation);
 
     //***********************************admin APIs *****************************************

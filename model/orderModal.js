@@ -38,6 +38,9 @@ const OrderSchema = new Schema({
         type:String,
         required:true,
     },
+    secretcode:{
+        type:String,
+    },
     products:{
         type:[String],
     },

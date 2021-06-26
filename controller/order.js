@@ -17,9 +17,11 @@ const mailservices = require('../controller/email')
 exports.CreateOrder = async function (req, res, next) {
             let id = nanoid(IDSIZE);
             let uuid = mongoose.Types.ObjectId(id);
+           let secretcode=Math.floor(Math.random() * 10000000).toString();
              let OrderPlace = new Order({
                 orderid:uuid, 
                 receiver:req.body.receiver, 
+                secretcode:secretcode,
                 seller:{
                     uuid:req.user.uuid,
                     name:req.user.name,
@@ -39,6 +41,7 @@ exports.CreateOrder = async function (req, res, next) {
                     throw Error("Error while creating order");
                 } else {
                     mailservices.SendMail(req.user.email,"Order Placed","Dear user your order has been successfully placed our driver will contact you soon.").then((result)=>{ 
+                        mailservices.SendMail(req.body.receiver.email,"Secret code","Dear user your order verification secret code is "+secretcode);
                         res.status(201).json({
                             message: "Order successfully created.",
                             order:val
