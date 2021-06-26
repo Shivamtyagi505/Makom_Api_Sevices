@@ -32,7 +32,11 @@ exports.Signup = function (req, res, next) {
                 state: req.body.state,
                 isverified:false,
                 isblocked:false,
+<<<<<<< HEAD
                 payment_threshold:req.body.payment_threshold
+=======
+                isAutomaticDelivery:false
+>>>>>>> 858a15f65f6d69b359454afb313a4ce0ab041af9
             }); 
             database.saveUser(seller).then((val) => {
                 if (val == null) {
@@ -90,8 +94,12 @@ exports.Signin = async function (req, res, next) {
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+<<<<<<< HEAD
                         payment_threshold:dbuser.isverified
 
+=======
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
+>>>>>>> 858a15f65f6d69b359454afb313a4ce0ab041af9
                         };
                         
                     //generating and sending the auth token as it will be required for furthur requests.
@@ -146,8 +154,12 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+<<<<<<< HEAD
                         payment_threshold:dbuser.isverified
 
+=======
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
+>>>>>>> 858a15f65f6d69b359454afb313a4ce0ab041af9
                 }
             })
             return res.status(200).json({
@@ -181,7 +193,11 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
+<<<<<<< HEAD
                         payment_threshold:dbuser.payment_threshold
+=======
+                        isAutomaticDelivery:dbuser.isAutomaticDelivery
+>>>>>>> 858a15f65f6d69b359454afb313a4ce0ab041af9
                 }
             })
             return res.status(200).json({

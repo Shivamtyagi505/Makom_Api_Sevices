@@ -27,7 +27,10 @@ exports.CreateOrder = async function (req, res, next) {
                     email:req.user.email
                 }, 
                 payment:req.body.payment, 
-                products:req.body.products,
+                products:{
+                    id: req.body.products,
+                    delivery_type:req.body.delivery_type,
+                },
                 status: "Placed",  
                 pickofflocation:req.body.pickofflocation,
                 destinationlocation:req.body.destinationlocation,
