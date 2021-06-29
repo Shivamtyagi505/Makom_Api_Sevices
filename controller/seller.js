@@ -163,7 +163,8 @@ exports.GetSellerByName = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
-                         location:dbuser.location
+                        location:dbuser.location,
+                        payment_threshold:val.payment_threshold
  
                 }
             })
@@ -198,8 +199,8 @@ exports.GetSeller = async function(req,res,next){
                         products:dbuser.products,
                         isblocked:dbuser.isblocked,
                         isverified:dbuser.isverified,
-                         location:dbuser.location 
-//                        payment_threshold:dbuser.payment_threshold,
+                         location:dbuser.location,
+                        payment_threshold:dbuser.payment_threshold,
 //                        isAutomaticDelivery:dbuser.isAutomaticDelivery
                  }
             })
@@ -230,7 +231,8 @@ exports.GetProfile = async function(req,res,next){
         state:user.state??"",
         orders:user.orders,
         products:user.products,
-        location:dbuser.location
+        location:dbuser.location,
+        payment_threshold:val.payment_threshold
     }
     return res.status(200).json({
        user:user_data

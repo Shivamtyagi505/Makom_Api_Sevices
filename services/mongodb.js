@@ -111,8 +111,16 @@ async function readObjectsByIds(ids, type) {
         return null;
     }
 
-  return  await QueryModel.find(data, function (err, result) {
-        if (err) {
+  
+    // return await QueryModel.find(data).sort({date: -1}).exec(function(err,docs){ 
+    //     if (err) {
+    //         return []; 
+    //         } else {  
+    //             return docs;
+    //         }
+    // });
+    return  await QueryModel.find(data, function (err, result) {
+    if (err) {
         return []; 
         } else { 
             return result;

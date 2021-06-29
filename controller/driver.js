@@ -170,7 +170,8 @@ exports.GetDriver = async function(req,res,next){
                     address:val.address??"",
                     city:val.city??"",
                     state:val.state??"",
-                    isblocked:val.isblocked??""
+                    isblocked:val.isblocked??"",
+                    payment_threshold:val.payment_threshold
                 }
             })
             console.log(alldrivers.length)
@@ -198,7 +199,7 @@ exports.GetProfile = async function(req,res,next){
         address:user.address??"",
         city:user.city??"",
         state:user.state??"",
-        orders:user.orders,
+        orders:user.orders, 
     }
     return res.status(200).json({
        user:user_data

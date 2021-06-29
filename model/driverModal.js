@@ -46,6 +46,9 @@ const DriverSchema = new Schema({
     },  
     fcm_token:{
         type:String
+    },
+    payment_threshold:{
+        type:Number
     }
 }, {
     timestamps: true,

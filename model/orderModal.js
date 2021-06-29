@@ -42,7 +42,7 @@ const OrderSchema = new Schema({
         type:String,
     },
     products:{
-        type:[String],
+        type:[{}],
     },
     currentlocation: {
         type: PlaceSchema,

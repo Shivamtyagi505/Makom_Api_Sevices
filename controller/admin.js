@@ -157,47 +157,61 @@ exports.LoginActivities = async function(req,res,next){
     })
 }
 
-exports.AutoDeli = async function(req,res,next){
-    let id = req.body.id;
-    let isAutomaticDelivery=req.body.isAutomaticDelivery;
-    if(id!=null&&isAutomaticDelivery!=null){
-       await database.readUserByIds([id],"seller").then((val)=>{
-        if(val==null||val[0]==null){
-            return res.status(401).json({ 
-                message:"Invalid seller id or seller does not exist",
-        });
-        }else{
-            val[0].isAutomaticDelivery=isAutomaticDelivery;
-            val[0].save().then((result)=>{ 
-                mailservices.SendMail(val[0].email,"Automatic delivery","Dear user driver is assigned").then((result)=>{ 
-                    res.status(200).json({
-                        isAutomaticDelivery:isAutomaticDelivery,
-                        message:"Driver assigned succesfully"
-                    }); 
-                }).catch((e)=>{
-                    console.log(e);
-                    res.status(401).json({
-                        error:"Error with email services"
-                    });
-                });      
-            
-            }).catch((e)=>{
-                throw "Error while updating the driver status check for proper isAutomaticDelivery flag in input";
-            });
+exports.UpdateProfile = async function(req,res,next){
+    var type = req.body.type;
+    //selller,driver
+    var id = req.body.id;
+    const { name, phone, address, city,state,location,payment_threshold} = req.body;
+    await database.readUserByIds([id],type).then((users)=>{
+        if(users==null||users.Length==0){
+            return res.status(401).json({
+                error: 'No user with the current parameter found'
+              });      
         }
-       }).catch((err)=>{
+        let user = users[0];
+        if(name){
+            user.name=name;
+        }
+        if(payment_threshold){
+            user.payment_threshold=payment_threshold;
+        } 
+        if(phone){
+            user.phone=phone;
+        }
+        if(address){
+            user.address=address;
+        }
+        if(city){
+            user.city=city;
+        }
+        if(state){
+            user.state=state;
+        }
+        if(location){
+            user.location=location;
+        }
+    return  user.save().then((result)=>{
+        if(result!=null){
+            return res.status(200).json({
+                error: 'User data updated successfully'
+              });      
+        }else{
+            return res.status(401).json({
+                error: 'Unable to update the userdata try again'
+              });
+        }
+    }).catch((err)=>{
         return res.status(401).json({
-            error:err
-        });    
-       });
-        
-    }else{
-        return res.status(401).json({
-            error:"isAutomaticDelivery or id not provided"
-        });
-    }
+            error: 'Provide valid update data error while updating the data'
+          });      
+    });  
+ 
+}).catch((err)=>{
+    return res.status(401).json({
+        error: 'No user exist with current type and id provided'
+      });      
+    });
 }
-
 
 var account_deactivated="account is no longer active it has been blocked by the admin you will no longer be able to use makom services.";
 var account_activated = "account is active now you will be able to use all makom services from now."
@@ -205,6 +219,7 @@ var account_activated = "account is active now you will be able to use all makom
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
     let id = req.body.id;
+    let threshold = req.body.payment_threshold;
   await database.readUserByIds([id],"seller").then((val)=>{
          
         if(val==null||val[0]==null){
@@ -214,6 +229,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
         }
         var user_data=val[0];
         user_data.isblocked=req.body.isblocked;
+        user_data.payment_threshold=threshold;
         var body = user_data.isblocked?account_deactivated:account_activated;
          console.log(user_data)
        database.saveUser(user_data).then((result)=>{ 
@@ -243,6 +259,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
     let id = req.body.id;
+    let threshold = req.body.payment_threshold;
      await  database.readUserByIds([id],"driver").then((val)=>{
             if(val==null||val[0]==null){
                 return res.status(401).json({ 
@@ -250,8 +267,8 @@ exports.ChangeDriverStatus = async function(req,res,next){
             });
             }
             var user_data=val[0];
-            user_data.isblocked=req.body.isblocked;
-            user_data.isblocked=req.body.isblocked;
+            user_data.isblocked=req.body.isblocked; 
+            user_data.payment_threshold=threshold;
             var body = user_data.isblocked?account_deactivated:account_activated;
  
             database.saveUser(user_data).then((result)=>{ 

@@ -57,6 +57,7 @@ module.exports= function(app){
   //  apiRoutes.post('/admin/seller/autodeli',auth.AuthManager,adminAuthController.AutoDeli);
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
+    apiRoutes.post('admin/user/profile',auth.AuthManager,adminAuthController.UpdateProfile);
     //block or unblock a seller
     apiRoutes.post('/admin/driver/changestatus',auth.AuthManager,adminAuthController.ChangeDriverStatus);
   //  apiRoutes.get('/admin/driver/search',auth.AuthManager,adminAuthController.SearchDriver);
