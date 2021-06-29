@@ -317,3 +317,29 @@ exports.SearchDriver = async function(req,res,next){
     })
  
 }
+
+exports.RemoveUser = async function(req,res,next){
+    let id = req.body.id; 
+    let type = req.body.type;
+    let QueryModel;
+     if(type=="admin"){
+         QueryModel= Admin;
+     }else if (type=="driver"){
+         QueryModel=Driver;
+     }else if (type=="seller"){
+         QueryModel=Seller;
+     }else{
+         return res.status(401).json({
+            error:"NO valid type for user is provided" 
+         })   
+     }
+     QueryModel.findByIdAndRemove(id).then(data=>{
+       return  res.status(200).json({
+           msg:"User removed successfully" 
+        })
+    }).catch((err)=>{
+         return res.status(401).json({
+            error:"Error no user with the current id" 
+         })
+    })
+};

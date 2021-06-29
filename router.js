@@ -58,6 +58,8 @@ module.exports= function(app){
     //block or verify a seller
     apiRoutes.post('/admin/seller/changestatus',auth.AuthManager,adminAuthController.ChangeSellerStatus);
     apiRoutes.post('admin/user/profile',auth.AuthManager,adminAuthController.UpdateProfile);
+    apiRoutes.post('admin/user/remove',auth.AuthManager,adminAuthController.RemoveUser);
+  
     //block or unblock a seller
     apiRoutes.post('/admin/driver/changestatus',auth.AuthManager,adminAuthController.ChangeDriverStatus);
   //  apiRoutes.get('/admin/driver/search',auth.AuthManager,adminAuthController.SearchDriver);
