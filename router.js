@@ -27,6 +27,7 @@ module.exports= function(app){
     apiRoutes.get('/seller/profile',auth.AuthManager,sellerAuthController.GetProfile);
     //update profile
     apiRoutes.post('/seller/profile',auth.AuthManager,sellerAuthController.UpdateProfile);
+    apiRoutes.post('/seller/remove',auth.AuthManager,sellerAuthController.RemoveSeller);
     //create a new order
     apiRoutes.get('/seller/statistics',auth.AuthManager,OrderController.GetSellerOrderStatistics);
     apiRoutes.post('/seller/order/create',auth.AuthManager,OrderController.CreateOrder);
@@ -44,6 +45,7 @@ module.exports= function(app){
     apiRoutes.post('/driver/order/verify',auth.AuthManager,driverAuthController.OrderVerify);
     apiRoutes.post('/driver/order/status',auth.AuthManager,driverAuthController.UpdateStatus);
     apiRoutes.post('/driver/order/complete',auth.AuthManager,driverAuthController.MarkComplete);
+    apiRoutes.post('/driver/remove',auth.AuthManager,driverAuthController.RemoveDriver);
     apiRoutes.post('/driver/order/updatelocation',auth.AuthManager,driverAuthController.UpdateLocation);
 
     //***********************************admin APIs *****************************************

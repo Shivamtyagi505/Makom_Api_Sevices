@@ -122,6 +122,37 @@ async function readObjectsByIds(ids, type) {
     }); 
 }
 
+async function readUsersByIdsandDelete(ids, type) {
+    var objects = [];
+    var QueryModel;
+    var data = {};
+    if (type == "seller") {
+        QueryModel = Seller;
+        if (ids != null) {
+            data = {
+                sellerid: ids
+            }
+        }
+    }
+    else if (type == "driver") {
+        QueryModel = Driver;
+        var data = {
+            driver_id: ids
+        };
+    } else {
+        return null;
+    }
+
+  return  await QueryModel.findByIdAndRemove(data, function (err, result) {
+        if (err) {
+        return []; 
+        } else { 
+            return result;
+        }
+    }).catch((e) => { 
+        return [];
+    }); 
+}
 
 /*****************************Write Queries*************************************************/
 
@@ -201,6 +232,7 @@ module.exports = {
     readUserByEmail,
     readObjectsByIds,
     readActivities,
+    readUsersByIdsandDelete,
     //write query
     saveUser,
     createOrder,

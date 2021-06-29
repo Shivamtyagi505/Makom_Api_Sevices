@@ -372,3 +372,24 @@ exports.OrderVerify = async function(req,res,next){
 }
 }
 
+exports.RemoveDriver = async function(req,res,next){
+    let ids = req.body.ids;
+    let driver= req.user;
+    await  database.readUserByIds(ids,"driver").then((result)=>{
+        driver = result
+        Driver.findByIdAndRemove(driver).then(data=>{
+            res.status(200).json({
+               msg:"Driver removed successfully" 
+            })
+        }).catch((err)=>{
+            res.status(401).json({
+                error:"Error no product with these ids exists" 
+             })
+        })
+    }).catch((err)=>{
+        res.status(401).json({
+            error:"Error communicating with database" 
+         })
+    })
+};
+

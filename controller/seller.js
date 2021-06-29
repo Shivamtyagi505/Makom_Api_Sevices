@@ -303,3 +303,24 @@ exports.GetMyOrders = async function(req,res,next){
     req.body.ids=order_ids;  
     next();
 }
+
+exports.RemoveSeller = async function(req,res,next){
+    let ids = req.body.ids;
+    let seller = req.user;
+    await  database.readUserByIds(ids,"seller").then((result)=>{
+        seller = result
+        Seller.findByIdAndRemove(seller).then(data=>{
+            res.status(200).json({
+               msg:"Seller removed successfully" 
+            })
+        }).catch((err)=>{
+            res.status(401).json({
+                error:"Error no product with these ids exists" 
+             })
+        })
+    }).catch((err)=>{
+        res.status(401).json({
+            error:"Error communicating with database" 
+         })
+    })
+};
