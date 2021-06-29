@@ -68,7 +68,7 @@ exports.CreateProduct = async function (req, res, next) {
                 seller.products.pop(ids[i]);
             }
           await seller.save().then((result)=>{
-                Product.findByIdAndRemove(ids).then(data=>{
+                Product.deleteMany({product_id:ids}).then(data=>{
                     res.status(200).json({
                        msg:"product removed successfully" 
                     })

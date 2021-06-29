@@ -107,6 +107,7 @@ exports.NewAdmin = function (req, res, next) {
 
 exports.ActivateSeller = async function(req,res,next){
     let id = req.body.id;
+    let threshold = req.body.payment_threshold;
     let isverified=req.body.isverified;
     if(id!=null&&isverified!=null){
        await database.readUserByIds([id],"seller").then((val)=>{
@@ -116,6 +117,7 @@ exports.ActivateSeller = async function(req,res,next){
         });
         }else{
             val[0].isverified=isverified;
+            val[0].payment_threshold=threshold;
             val[0].save().then((result)=>{ 
                 mailservices.SendMail(val[0].email,"Account verified","Dear user your account is successfully verified").then((result)=>{ 
                     res.status(200).json({
@@ -193,7 +195,7 @@ exports.UpdateProfile = async function(req,res,next){
     return  user.save().then((result)=>{
         if(result!=null){
             return res.status(200).json({
-                error: 'User data updated successfully'
+                msg: 'User data updated successfully'
               });      
         }else{
             return res.status(401).json({
@@ -219,8 +221,7 @@ var account_activated = "account is active now you will be able to use all makom
 // update seller status by id;
 exports.ChangeSellerStatus = async function(req,res,next){
     let id = req.body.id;
-    let threshold = req.body.payment_threshold;
-  await database.readUserByIds([id],"seller").then((val)=>{
+   await database.readUserByIds([id],"seller").then((val)=>{
          
         if(val==null||val[0]==null){
             return res.status(401).json({ 
@@ -229,8 +230,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
         }
         var user_data=val[0];
         user_data.isblocked=req.body.isblocked;
-        user_data.payment_threshold=threshold;
-        var body = user_data.isblocked?account_deactivated:account_activated;
+         var body = user_data.isblocked?account_deactivated:account_activated;
          console.log(user_data)
        database.saveUser(user_data).then((result)=>{ 
             mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
@@ -259,8 +259,7 @@ exports.ChangeSellerStatus = async function(req,res,next){
 // update driver status by id;
 exports.ChangeDriverStatus = async function(req,res,next){
     let id = req.body.id;
-    let threshold = req.body.payment_threshold;
-     await  database.readUserByIds([id],"driver").then((val)=>{
+      await  database.readUserByIds([id],"driver").then((val)=>{
             if(val==null||val[0]==null){
                 return res.status(401).json({ 
                     message:"Invalid driver id",
@@ -268,8 +267,7 @@ exports.ChangeDriverStatus = async function(req,res,next){
             }
             var user_data=val[0];
             user_data.isblocked=req.body.isblocked; 
-            user_data.payment_threshold=threshold;
-            var body = user_data.isblocked?account_deactivated:account_activated;
+             var body = user_data.isblocked?account_deactivated:account_activated;
  
             database.saveUser(user_data).then((result)=>{ 
                 mailservices.SendMail(user_data.email,"Account status changed","Dear user your "+body).then((result)=>{ 
@@ -333,7 +331,7 @@ exports.RemoveUser = async function(req,res,next){
             error:"NO valid type for user is provided" 
          })   
      }
-     QueryModel.findByIdAndRemove(id).then(data=>{
+     QueryModel.deleteMany({uuid:id}).then(data=>{
        return  res.status(200).json({
            msg:"User removed successfully" 
         })
