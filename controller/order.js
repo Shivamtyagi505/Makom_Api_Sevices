@@ -204,34 +204,13 @@ exports.GetSellerOrderStatistics = async function(req,res,next){
           }
           return res.status(200).json({
               total_orders:total,
-              placed_orders:{
-                  counts:placed.length,
-                  orders:placed
-              },
-              completed_orders:{
-                  counts:completed.length,
-                  orders:completed
-              },
-              approved_by_admin:{
-                  counts:approved.length,
-                  orders:approved,
-              },
-              rejected_by_admin:{
-                  counts:rejected.length,
-                  orders:rejected
-              },
-              assigned_to_driver:{
-                  counts:assigned.length,
-                  orders:assigned
-              },
-              shipping:{
-                  counts:shipping.length,
-                  orders:shipping
-              },
-              arrived:{
-                  counts:arrived.length,
-                  orders:arrived,
-              } 
+              placed_orders: placed.length,
+              completed_orders: completed.length,
+              approved_by_admin:approved.length,
+              rejected_by_admin:rejected.length,
+              assigned_to_driver: assigned.length,
+              shipping: shipping.length,
+              arrived: arrived.length, 
           });
       }).catch((e)=>{
           console.log(e);
