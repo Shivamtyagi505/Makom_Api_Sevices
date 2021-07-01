@@ -33,8 +33,7 @@ exports.CreateOrder = async function (req, res, next) {
                 products:req.body.products,
                 status: "placed",  
                 pickofflocation:req.body.pickofflocation,
-                destinationlocation:req.body.destinationlocation,
-    
+                destinationlocation:req.body.destinationlocation,    
             });  
            await database.createOrder(OrderPlace,req.user).then((val) => {
                 if (val == null) {
@@ -67,9 +66,12 @@ exports.CreateOrder = async function (req, res, next) {
  //get drivers or particular driver by id;
 exports.GetOrder = async function(req,res,next){
     var ids = req.body.ids;
-    var allorders=[];
+    var filter= req.body.filter;
+
+
+    var allorders=[]; 
      await database.readObjectsByIds(ids,"order").then((result)=>{
-            allorders = result;
+         allorders= result.reverse();
             return res.status(200).json({
                 orders: allorders,
                 count: allorders.length

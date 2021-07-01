@@ -94,7 +94,7 @@ exports.Signin = async function (req, res, next) {
                     let driver_activity=new Activity({
                         device:req.headers['user-agent'],
                         ipaddress:req.ip ||null,
-                        userid:dbuser.uuid,
+                        uuid:dbuser.uuid,
                         email:dbuser.email,
                         name:dbuser.name,
                         type:"driver"
