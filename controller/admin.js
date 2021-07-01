@@ -41,7 +41,9 @@ exports.Signin = async function (req, res, next) {
                         device:req.headers['user-agent'],
                         ipaddress:req.ip ||null,
                         userid:dbuser.uuid || null,
-                        email:req.body.email
+                        email:req.body.email,
+                        name: req.body.name,
+                        uuid : req.body.uuid
                       })
                     database.saveActivity(admin_activity)
                     dbuser.save().then((result)=>{

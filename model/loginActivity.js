@@ -7,7 +7,16 @@ const ActivitySchema = new Schema({
      }, 
     ipaddress: {
         type: String,
-     }, 
+     },
+     email: {
+        type: String,
+     },
+     name: {
+        type: String,
+     },
+     uuid: {
+        type: String,
+     },
 }, {
     timestamps: true,
 });
