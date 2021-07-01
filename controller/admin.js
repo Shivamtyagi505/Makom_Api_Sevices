@@ -40,11 +40,11 @@ exports.Signin = async function (req, res, next) {
                     let admin_activity=new Activity({
                         device:req.headers['user-agent'],
                         ipaddress:req.ip ||null,
-                        userid:dbuser.uuid || null,
-                        email:req.body.email,
-                        name: req.body.name,
-                        uuid : req.body.uuid
-                      })
+                        uuid:dbuser.uuid,
+                        email:dbuser.email,
+                        name:dbuser.name,
+                        type:"admin"
+                            })
                     database.saveActivity(admin_activity)
                     dbuser.save().then((result)=>{
                         return res.status(200).json({

@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 const ActivitySchema = new Schema({
     device:{
         type:String,
+     },
+     type:{
+        type:String,
      }, 
     ipaddress: {
         type: String,

@@ -95,7 +95,9 @@ exports.Signin = async function (req, res, next) {
                         device:req.headers['user-agent'],
                         ipaddress:req.ip ||null,
                         userid:dbuser.uuid,
-                        email:req.body.email
+                        email:dbuser.email,
+                        name:dbuser.name,
+                        type:"driver"
                       })
                      database.saveActivity(driver_activity)
         
