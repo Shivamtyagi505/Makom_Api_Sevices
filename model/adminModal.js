@@ -23,8 +23,10 @@ const AdminSchema = new Schema({
     }, 
     fcm_token:{
         type:String
-    }
-    
+    },
+    type:{
+        type:String,
+    },
 }, {
     timestamps: true,
 });

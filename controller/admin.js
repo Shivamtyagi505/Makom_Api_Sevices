@@ -51,8 +51,9 @@ exports.Signin = async function (req, res, next) {
                             message: "Successfully logged in",
                             details: authToken,
                             email : result.email,
-                            name:result.name,
-                            uuid:result.uuid
+                            name: result.name,
+                            uuid: result.uuid,
+                            type: result.type
                         });
                     });
                 } else {
@@ -83,7 +84,9 @@ exports.NewAdmin = function (req, res, next) {
                 email:req.body.email,
                 name:req.body.name, 
                 password:hash,
+                type:req.body.type
             }); 
+            console.log(admin)
             database.saveUser(admin).then((val) => {
                 if (val == null) {
                     throw Error("Error while setting account");
